@@ -32,6 +32,7 @@ impl<'a> Lexer<'a> {
             '-' => self.consume_token(Minus, cur_idx, 1),
             '*' => self.consume_token(Asterisk, cur_idx, 1),
             '/' => self.consume_token(Slash, cur_idx, 1),
+            '^' => self.consume_token(Caret, cur_idx, 1),
 
             '=' => {
                 self.next();

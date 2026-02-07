@@ -12,6 +12,7 @@ pub enum TokenKind {
     Minus,
     Asterisk,
     Slash,
+    Caret,
 
     LessThan,
     LessThanOrEqual,
