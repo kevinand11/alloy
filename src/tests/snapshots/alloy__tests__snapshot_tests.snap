@@ -1,7 +1,7 @@
 ---
 source: src/tests/mod.rs
 expression: tokens
-input_file: src/tests/cases/syntax.alloy
+input_file: src/tests/cases/maths.alloy
 ---
 [
     Token {
@@ -12,7 +12,7 @@ input_file: src/tests/cases/syntax.alloy
         ),
     },
     Token {
-        kind: Plus,
+        kind: Minus,
         span: Span(
             2,
             3,
@@ -26,7 +26,7 @@ input_file: src/tests/cases/syntax.alloy
         ),
     },
     Token {
-        kind: Asterisk,
+        kind: Plus,
         span: Span(
             6,
             7,
@@ -40,21 +40,21 @@ input_file: src/tests/cases/syntax.alloy
         ),
     },
     Token {
+        kind: LiteralInt,
+        span: Span(
+            11,
+            12,
+        ),
+    },
+    Token {
         kind: Slash,
         span: Span(
-            10,
-            11,
+            13,
+            14,
         ),
     },
     Token {
         kind: LiteralInt,
-        span: Span(
-            12,
-            13,
-        ),
-    },
-    Token {
-        kind: Caret,
         span: Span(
             14,
             15,
@@ -63,33 +63,54 @@ input_file: src/tests/cases/syntax.alloy
     Token {
         kind: LiteralInt,
         span: Span(
-            16,
             17,
-        ),
-    },
-    Token {
-        kind: Indentifier,
-        span: Span(
-            19,
-            23,
-        ),
-    },
-    Token {
-        kind: Indentifier,
-        span: Span(
-            24,
-            28,
+            18,
         ),
     },
     Token {
         kind: LiteralInt,
+        span: Span(
+            19,
+            20,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            22,
+            23,
+        ),
+    },
+    Token {
+        kind: LessThan,
+        span: Span(
+            24,
+            25,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            26,
+            27,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            28,
+            29,
+        ),
+    },
+    Token {
+        kind: GreaterThan,
         span: Span(
             30,
             31,
         ),
     },
     Token {
-        kind: LessThan,
+        kind: LiteralInt,
         span: Span(
             32,
             33,
@@ -103,23 +124,16 @@ input_file: src/tests/cases/syntax.alloy
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: LessThanOrEqual,
         span: Span(
             36,
-            37,
-        ),
-    },
-    Token {
-        kind: GreaterThan,
-        span: Span(
             38,
-            39,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            40,
+            39,
             41,
         ),
     },
@@ -127,91 +141,63 @@ input_file: src/tests/cases/syntax.alloy
         kind: LiteralInt,
         span: Span(
             42,
-            43,
-        ),
-    },
-    Token {
-        kind: LessThanOrEqual,
-        span: Span(
             44,
-            46,
-        ),
-    },
-    Token {
-        kind: LiteralInt,
-        span: Span(
-            47,
-            49,
-        ),
-    },
-    Token {
-        kind: LiteralInt,
-        span: Span(
-            50,
-            52,
         ),
     },
     Token {
         kind: GreaterThanOrEqual,
         span: Span(
+            45,
+            47,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            48,
+            50,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            51,
             53,
-            55,
-        ),
-    },
-    Token {
-        kind: LiteralInt,
-        span: Span(
-            56,
-            58,
-        ),
-    },
-    Token {
-        kind: LiteralInt,
-        span: Span(
-            59,
-            61,
         ),
     },
     Token {
         kind: DoubleEquals,
         span: Span(
+            54,
+            56,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            57,
+            59,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            60,
             62,
-            64,
-        ),
-    },
-    Token {
-        kind: LiteralInt,
-        span: Span(
-            65,
-            67,
-        ),
-    },
-    Token {
-        kind: LiteralInt,
-        span: Span(
-            68,
-            70,
         ),
     },
     Token {
         kind: NotEquals,
         span: Span(
-            71,
-            73,
+            63,
+            65,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            74,
-            76,
-        ),
-    },
-    Token {
-        kind: Comment,
-        span: Span(
-            78,
-            95,
+            66,
+            68,
         ),
     },
 ]

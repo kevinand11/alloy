@@ -19,7 +19,8 @@ fn snapshot_tests() {
         insta::assert_debug_snapshot!(tokens);
 
         let mut parser = Parser::new(lexer);
-        let ast = parser.parse().unwrap();
-        //insta::assert_debug_snapshot!(ast);
+        let ast = parser.parse();
+        assert!(ast.is_ok());
+        insta::assert_debug_snapshot!(ast.unwrap());
     });
 }
