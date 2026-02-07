@@ -217,7 +217,7 @@ input_file: src/tests/cases/maths.alloy
     Token {
         kind: Number,
         span: Span(
-            72,
+            71,
             73,
         ),
     },

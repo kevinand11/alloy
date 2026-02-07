@@ -1,4 +1,4 @@
-use crate::common::{span::Span, peeker::Peeker};
+use crate::{common::{peeker::Peeker, span::Span}, lexer::token::Token};
 
 #[derive(Clone, Debug)]
 pub struct Module {
@@ -15,6 +15,10 @@ impl Module {
     pub fn get_peeker(&self) -> Peeker<char> {
         let chars: Vec<char> = self.src.chars().collect();
         Peeker::new(chars)
+    }
+
+    pub fn token(&self, token: &Token) -> &str {
+        &self.src[token.span.0..token.span.1]
     }
 
     pub fn slice(&self, start: usize, end: usize) -> &str {

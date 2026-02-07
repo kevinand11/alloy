@@ -8,13 +8,13 @@ pub struct Ast(pub Vec<Expression>); // restructure to global scope expressions 
 #[derive(Debug)]
 pub enum AstError {
     NoPrefixParse(Token),
-    Expected(Token, TokenKind),
+    Expected(Token, Vec<TokenKind>),
     Syntax(Token, String),
     UnexpectedEof,
 }
 
 impl AstError {
-    pub fn expected(token: Token, exp: TokenKind) -> Self {
+    pub fn expected(token: Token, exp: Vec<TokenKind>) -> Self {
         AstError::Expected(token, exp)
     }
 

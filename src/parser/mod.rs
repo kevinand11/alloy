@@ -5,7 +5,7 @@ use crate::{
         token::{Token, TokenKind},
     },
     parser::{
-        expression::{Expression, ExpressionKind, InfixOp, PrefixOp},
+        expression::{Expression, ExpressionKind, InfixOp, PrefixOp, VarType},
         precedence::Precedence,
     },
 };
@@ -14,8 +14,6 @@ use ast::{Ast, AstError};
 pub mod ast;
 pub mod expression;
 pub mod precedence;
-
-type LHParseFn = Box<dyn Fn(&mut Parser) -> Result<Expression, AstError>>;
 
 pub struct Parser {
     lexer: Lexer,
@@ -37,7 +35,7 @@ impl Parser {
     }
 
     fn parse_expression(&mut self, precedence: Precedence) -> Result<Expression, AstError> {
-        let mut expr = self.get_lh_parse_fn()?(self)?;
+        let mut expr = self.get_first_expression()?;
 
         while Precedence::of(self.peek_kind()) > precedence {
             expr = match self.peek_kind() {
@@ -66,7 +64,7 @@ impl Parser {
                 TokenKind::LBrace => todo!(),
                 TokenKind::RBrace => todo!(),
 
-                TokenKind::Indentifier => todo!(),
+                TokenKind::Ident => todo!(),
                 TokenKind::Comment => {
                     self.consume()?;
                     self.parse_expression(precedence.clone())?
@@ -98,17 +96,22 @@ impl Parser {
         ))
     }
 
-    fn get_lh_parse_fn(&mut self) -> Result<LHParseFn, AstError> {
+    fn get_first_expression(&mut self) -> Result<Expression, AstError> {
         match self.peek_kind() {
             TokenKind::Comment => {
-                self.expect(TokenKind::Comment)?;
-                self.get_lh_parse_fn()
+                self.consume()?;
+                self.get_first_expression()
             }
-            TokenKind::Number => Ok(Box::new(|parser| parser.parse_literal_number())),
-            TokenKind::Exclamation => Ok(Box::new(|parser| {
-                parser.parse_prefix_expression(PrefixOp::Not)
-            })),
-            TokenKind::LBrace => Ok(Box::new(|parser| parser.parse_block_expression())),
+            TokenKind::Number => self.parse_number(),
+            TokenKind::Exclamation => self.parse_prefix_expression(PrefixOp::Not),
+            TokenKind::LBrace => self.parse_block_expression(),
+            TokenKind::Ident => {
+                let token = self.consume()?;
+                match self.peek_kind() {
+                    TokenKind::Colon => self.parse_variable_declaration(token),
+                    _ => self.parse_variable_usage(token),
+                }
+            }
             _ => Err(AstError::no_prefix_parse(self.consume()?)),
         }
     }
@@ -139,9 +142,9 @@ impl Parser {
         ))
     }
 
-    fn parse_literal_number(&mut self) -> Result<Expression, AstError> {
+    fn parse_number(&mut self) -> Result<Expression, AstError> {
         let token = self.expect(TokenKind::Number)?;
-		let span = token.span;
+        let span = token.span;
 
         let raw = self.lexer.module.span_slice(&span);
         let cleaned: String = raw.chars().filter(|c| *c != '_').collect();
@@ -159,12 +162,55 @@ impl Parser {
         }
     }
 
+    fn parse_type(&mut self) -> Result<VarType, AstError> {
+        let token = self.expect(TokenKind::Ident)?;
+        Ok(VarType(self.lexer.module.token(&token).to_string()))
+    }
+
+    fn parse_variable_declaration(&mut self, start: Token) -> Result<Expression, AstError> {
+        let name = self.lexer.module.token(&start).to_string();
+        self.consume()?;
+        let mut ty = None;
+        if self.peek_kind() == &TokenKind::Ident {
+            ty = Some(self.parse_type()?);
+        }
+
+        let mutable = match self.peek_kind() {
+            TokenKind::Colon => false,
+            TokenKind::Equals => true,
+            _ => {
+                return Err(AstError::expected(
+                    start,
+                    vec![TokenKind::Colon, TokenKind::Equals],
+                ));
+            }
+        };
+
+        self.consume()?;
+        let value = self.parse_expression(Precedence::Lowest)?;
+        let span = start.span.to(&value.span);
+        Ok(Expression::new(
+            ExpressionKind::VariableDecl {
+                name,
+                value: Box::new(value),
+                mutable,
+                ty,
+            },
+            span,
+        ))
+    }
+
+    fn parse_variable_usage(&mut self, start: Token) -> Result<Expression, AstError> {
+        let name = (*self).lexer.module.token(&start).to_string();
+        Ok(Expression::new(ExpressionKind::Ident(name), start.span))
+    }
+
     fn expect(&mut self, exp: TokenKind) -> Result<Token, AstError> {
         let token = self.consume()?;
         if token.kind == exp {
             Ok(token)
         } else {
-            Err((&AstError::expected)(token, exp))
+            Err((&AstError::expected)(token, vec![exp]))
         }
     }
 

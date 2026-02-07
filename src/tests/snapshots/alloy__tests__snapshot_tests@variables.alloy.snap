@@ -1,0 +1,126 @@
+---
+source: src/tests/mod.rs
+expression: tokens
+input_file: src/tests/cases/variables.alloy
+---
+[
+    Token {
+        kind: Ident,
+        span: Span(
+            0,
+            1,
+        ),
+    },
+    Token {
+        kind: Colon,
+        span: Span(
+            2,
+            3,
+        ),
+    },
+    Token {
+        kind: Colon,
+        span: Span(
+            3,
+            4,
+        ),
+    },
+    Token {
+        kind: Number,
+        span: Span(
+            5,
+            6,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            7,
+            8,
+        ),
+    },
+    Token {
+        kind: Colon,
+        span: Span(
+            9,
+            10,
+        ),
+    },
+    Token {
+        kind: Equals,
+        span: Span(
+            10,
+            11,
+        ),
+    },
+    Token {
+        kind: Number,
+        span: Span(
+            12,
+            13,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            14,
+            15,
+        ),
+    },
+    Token {
+        kind: Colon,
+        span: Span(
+            16,
+            17,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            17,
+            20,
+        ),
+    },
+    Token {
+        kind: Equals,
+        span: Span(
+            21,
+            22,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            23,
+            24,
+        ),
+    },
+    Token {
+        kind: Plus,
+        span: Span(
+            25,
+            26,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            27,
+            28,
+        ),
+    },
+    Token {
+        kind: Exclamation,
+        span: Span(
+            29,
+            30,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            30,
+            31,
+        ),
+    },
+]

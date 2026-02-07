@@ -19,6 +19,13 @@ pub enum ExpressionKind {
     },
 
     Block(Vec<Expression>),
+
+    VariableDecl {
+        name: String,
+        value: Box<Expression>,
+        mutable: bool,
+        ty: Option<VarType>,
+    },
 }
 
 #[derive(Debug)]
@@ -52,3 +59,6 @@ impl Expression {
         Self { kind, span }
     }
 }
+
+#[derive(Debug)]
+pub struct VarType(pub String);

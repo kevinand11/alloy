@@ -24,9 +24,11 @@ pub enum TokenKind {
     LBrace,
     RBrace,
     Exclamation,
+    Colon,
+    Equals,
 
     Number,
-    Indentifier,
+    Ident,
 
     Comment,
     Illegal,

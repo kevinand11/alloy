@@ -271,10 +271,10 @@ Ast(
                 op: Not,
                 rh: Expression {
                     kind: LiteralInt(
-                        7,
+                        17,
                     ),
                     span: Span(
-                        72,
+                        71,
                         73,
                     ),
                 },

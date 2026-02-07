@@ -59,7 +59,8 @@ impl Lexer {
                 if char_peeker.peek().is_some_and(|(c, _)| c == &'=') {
                     Token::new(DoubleEquals, cur_idx, 2)
                 } else {
-                    Token::new(Illegal, cur_idx, 1)
+                    call_next = false;
+                    Token::new(Equals, cur_idx, 1)
                 }
             }
             '<' => {
@@ -67,6 +68,7 @@ impl Lexer {
                 if char_peeker.peek().is_some_and(|(c, _)| c == &'=') {
                     Token::new(LessThanOrEqual, cur_idx, 2)
                 } else {
+                    call_next = false;
                     Token::new(LessThan, cur_idx, 1)
                 }
             }
@@ -75,6 +77,7 @@ impl Lexer {
                 if char_peeker.peek().is_some_and(|(c, _)| c == &'=') {
                     Token::new(GreaterThanOrEqual, cur_idx, 2)
                 } else {
+                    call_next = false;
                     Token::new(GreaterThan, cur_idx, 1)
                 }
             }
@@ -83,12 +86,14 @@ impl Lexer {
                 if char_peeker.peek().is_some_and(|(c, _)| c == &'=') {
                     Token::new(NotEquals, cur_idx, 2)
                 } else {
+                    call_next = false;
                     Token::new(Exclamation, cur_idx, 1)
                 }
             }
 
             '{' => Token::new(LBrace, cur_idx, 1),
             '}' => Token::new(RBrace, cur_idx, 1),
+            ':' => Token::new(Colon, cur_idx, 1),
 
             'a'..='z' | 'A'..='Z' | '_' => {
                 let mut last = cur_idx;
@@ -101,7 +106,7 @@ impl Lexer {
                 }
                 let chars = &self.module.slice(cur_idx, last + 1);
                 call_next = false;
-                Token::new(Indentifier, cur_idx, chars.len())
+                Token::new(Ident, cur_idx, chars.len())
             }
             '0'..='9' => {
                 let last = self.read_number(char_peeker, cur_idx);
