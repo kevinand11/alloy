@@ -35,17 +35,17 @@ pub enum InfixOp {
     Divide,
     Power,
     LessThan,
-    LessThanOrEqualTo,
+    LessThanOrEqual,
     GreaterThan,
-    GreaterThanOrEqualTo,
+    GreaterThanOrEqual,
     Equals,
     NotEquals,
 }
 
 #[derive(Debug)]
 pub struct Expression {
-    kind: ExpressionKind,
-    span: Span,
+    pub kind: ExpressionKind,
+    pub span: Span,
 }
 
 impl Expression {

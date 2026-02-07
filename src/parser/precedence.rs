@@ -1,5 +1,6 @@
 use crate::lexer::token::TokenKind::{self, *};
 
+#[derive(Clone, PartialEq, PartialOrd)]
 pub enum Precedence {
     Lowest,
     Equality,   // == or !=
@@ -12,7 +13,7 @@ pub enum Precedence {
 }
 
 impl Precedence {
-    fn of(kind: &TokenKind) -> Self {
+    pub fn of(kind: &TokenKind) -> Self {
         match kind {
             DoubleEquals | NotEquals => Precedence::Equality,
             LessThan | GreaterThan | LessThanOrEqual | GreaterThanOrEqual => Precedence::Comparison,

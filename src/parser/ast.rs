@@ -1,25 +1,31 @@
 use super::expression::Expression;
 
-use crate::lexer::token::TokenKind;
+use crate::lexer::token::{Token, TokenKind};
 
 #[derive(Debug)]
 pub struct Ast(pub Vec<Expression>); // restructure to global scope expressions and main entry fn
 
 pub enum AstError {
-    NoToken,
-    NoPrefixParse(TokenKind),
-    Expected { exp: TokenKind, got: TokenKind },
-    Syntax(String),
+    NoPrefixParse(Token),
+    Expected(Token, TokenKind),
+    Syntax(Token, String),
     UnexpectedEof,
-    IllegalGlobalExpression(Expression),
 }
 
 impl AstError {
-    pub fn expected(exp: TokenKind, got: TokenKind) -> Self {
-        Self::Expected { exp, got }
+    pub fn expected(token: Token, exp: TokenKind) -> Self {
+        AstError::Expected(token, exp)
     }
 
-    pub fn syntax_err(s: &str) -> Self {
-        Self::Syntax(format!("syntax error: {s}"))
+    pub fn syntax(token: Token, s: &str) -> Self {
+        AstError::Syntax(token, format!("syntax error: {s}"))
+    }
+
+    pub fn eof() -> Self {
+        AstError::UnexpectedEof
+    }
+
+    pub fn no_prefix_parse(token: Token) -> Self {
+        AstError::NoPrefixParse(token)
     }
 }

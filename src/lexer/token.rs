@@ -1,6 +1,6 @@
 use crate::span::Span;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Token {
     pub kind: TokenKind,
     pub span: Span,
@@ -23,7 +23,6 @@ pub enum TokenKind {
 
     LBrace,
     RBrace,
-    Hash,
 
     LiteralInt,
     LiteralFloat,
