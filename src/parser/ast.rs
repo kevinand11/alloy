@@ -15,7 +15,7 @@ pub enum AstError {
 }
 
 impl AstError {
-    pub fn expected<'a>(exp: TokenKind, got: TokenKind) -> Self {
+    pub fn expected(exp: TokenKind, got: TokenKind) -> Self {
         Self::Expected { exp, got }
     }
 

@@ -2,21 +2,26 @@ use std::{iter::Peekable, str::CharIndices};
 
 use token::{Token, TokenKind, TokenKind::*};
 
-use crate::lexer::src::Src;
+use crate::lexer::module::Module;
 
-pub mod src;
+pub mod module;
 pub mod token;
 
 #[derive(Clone)]
 pub struct Lexer<'a> {
-    pub src: Src<'a>,
+    pub module: &'a Module<'a>,
     chars: Peekable<CharIndices<'a>>,
 }
 
 impl<'a> Lexer<'a> {
-    pub fn new(src: Src<'a>) -> Self {
-        let chars = src.chars();
-        Self { src, chars }
+    pub fn new(module: &'a Module) -> Self {
+        let chars = module.get_peeker();
+        Self { module, chars }
+    }
+
+    pub fn get_peekable(&self) -> Peekable<Self> {
+        // TODO: quite expensive, refactor
+        self.clone().peekable()
     }
 
     fn read_token(&mut self) -> Token {
@@ -25,7 +30,7 @@ impl<'a> Lexer<'a> {
         }
 
         let Some((cur_idx, cur_char)) = self.peek() else {
-            let src_ln = self.src.ln();
+            let src_ln = self.module.ln();
             return Token::new(Eof, (src_ln, src_ln));
         };
 
@@ -100,16 +105,16 @@ impl<'a> Lexer<'a> {
         token
     }
 
-    fn read_number(&mut self, position: usize) -> &'a str {
+    fn read_number(&mut self, position: usize) -> &str {
         let mut last = position;
         while self.peek().is_some_and(|(_, c)| c.is_ascii_digit()) {
             let (l, _) = self.next().unwrap();
             last = l;
         }
-        &self.src.slice(position, last + 1)
+        &self.module.slice(position, last + 1)
     }
 
-    fn read_identifier(&mut self, position: usize) -> &'a str {
+    fn read_identifier(&mut self, position: usize) -> &str {
         let mut last = position;
         while self
             .peek()
@@ -118,7 +123,7 @@ impl<'a> Lexer<'a> {
             let (l, _) = self.next().unwrap();
             last = l;
         }
-        &self.src.slice(position, last + 1)
+        &self.module.slice(position, last + 1)
     }
 }
 

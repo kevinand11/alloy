@@ -7,289 +7,239 @@ input_file: src/tests/cases/syntax.alloy
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                0,
-                1,
-            ),
+            0,
+            1,
         ),
     },
     Token {
         kind: Plus,
         span: Span(
-            (
-                2,
-                3,
-            ),
+            2,
+            3,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                4,
-                5,
-            ),
+            4,
+            5,
         ),
     },
     Token {
         kind: Asterisk,
         span: Span(
-            (
-                6,
-                7,
-            ),
+            6,
+            7,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                8,
-                9,
-            ),
+            8,
+            9,
         ),
     },
     Token {
         kind: Slash,
         span: Span(
-            (
-                10,
-                11,
-            ),
+            10,
+            11,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                12,
-                13,
-            ),
+            12,
+            13,
         ),
     },
     Token {
-        kind: Indentifier,
+        kind: Caret,
         span: Span(
-            (
-                15,
-                19,
-            ),
-        ),
-    },
-    Token {
-        kind: Indentifier,
-        span: Span(
-            (
-                20,
-                24,
-            ),
+            14,
+            15,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                26,
-                27,
-            ),
+            16,
+            17,
+        ),
+    },
+    Token {
+        kind: Indentifier,
+        span: Span(
+            19,
+            23,
+        ),
+    },
+    Token {
+        kind: Indentifier,
+        span: Span(
+            24,
+            28,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            30,
+            31,
         ),
     },
     Token {
         kind: LessThan,
         span: Span(
-            (
-                28,
-                29,
-            ),
+            32,
+            33,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                30,
-                31,
-            ),
+            34,
+            35,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                32,
-                33,
-            ),
+            36,
+            37,
         ),
     },
     Token {
         kind: GreaterThan,
         span: Span(
-            (
-                34,
-                35,
-            ),
+            38,
+            39,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                36,
-                37,
-            ),
+            40,
+            41,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                38,
-                39,
-            ),
+            42,
+            43,
         ),
     },
     Token {
         kind: LessThanOrEqual,
         span: Span(
-            (
-                40,
-                42,
-            ),
+            44,
+            46,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                43,
-                45,
-            ),
+            47,
+            49,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                46,
-                48,
-            ),
+            50,
+            52,
         ),
     },
     Token {
         kind: GreaterThanOrEqual,
         span: Span(
-            (
-                49,
-                51,
-            ),
+            53,
+            55,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                52,
-                54,
-            ),
+            56,
+            58,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                55,
-                57,
-            ),
+            59,
+            61,
         ),
     },
     Token {
-        kind: DoubleEqual,
+        kind: DoubleEquals,
         span: Span(
-            (
-                58,
-                60,
-            ),
+            62,
+            64,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                61,
-                63,
-            ),
+            65,
+            67,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                64,
-                66,
-            ),
+            68,
+            70,
         ),
     },
     Token {
-        kind: NotEqual,
+        kind: NotEquals,
         span: Span(
-            (
-                67,
-                69,
-            ),
+            71,
+            73,
         ),
     },
     Token {
         kind: LiteralInt,
         span: Span(
-            (
-                70,
-                72,
-            ),
+            74,
+            76,
         ),
     },
     Token {
         kind: RBrace,
         span: Span(
-            (
-                74,
-                75,
-            ),
+            78,
+            79,
         ),
     },
     Token {
         kind: Indentifier,
         span: Span(
-            (
-                76,
-                77,
-            ),
+            80,
+            81,
         ),
     },
     Token {
         kind: Indentifier,
         span: Span(
-            (
-                78,
-                83,
-            ),
+            82,
+            87,
         ),
     },
     Token {
         kind: Indentifier,
         span: Span(
-            (
-                84,
-                86,
-            ),
+            88,
+            90,
         ),
     },
     Token {
         kind: Indentifier,
         span: Span(
-            (
-                87,
-                91,
-            ),
+            91,
+            95,
         ),
     },
 ]
