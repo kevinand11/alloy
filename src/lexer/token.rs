@@ -6,7 +6,7 @@ pub struct Token {
     pub span: Span,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum TokenKind {
     Plus,
     Minus,
@@ -18,8 +18,8 @@ pub enum TokenKind {
     LessThanOrEqual,
     GreaterThan,
     GreaterThanOrEqual,
-    DoubleEqual,
-    NotEqual,
+    DoubleEquals,
+    NotEquals,
 
     LBrace,
     RBrace,

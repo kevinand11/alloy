@@ -8,18 +8,15 @@ pub struct Ast(pub Vec<Expression>); // restructure to global scope expressions 
 pub enum AstError {
     NoToken,
     NoPrefixParse(TokenKind),
-    Expected { exp: String, got: String },
+    Expected { exp: TokenKind, got: TokenKind },
     Syntax(String),
     UnexpectedEof,
     IllegalGlobalExpression(Expression),
 }
 
 impl AstError {
-    pub fn expected<'a>(exp: &str, got: &str) -> Self {
-        Self::Expected {
-            exp: exp.to_string(),
-            got: got.to_string(),
-        }
+    pub fn expected<'a>(exp: TokenKind, got: TokenKind) -> Self {
+        Self::Expected { exp, got }
     }
 
     pub fn syntax_err(s: &str) -> Self {

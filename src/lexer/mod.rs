@@ -2,19 +2,21 @@ use std::{iter::Peekable, str::CharIndices};
 
 use token::{Token, TokenKind, TokenKind::*};
 
+use crate::lexer::src::Src;
+
+pub mod src;
 pub mod token;
 
+#[derive(Clone)]
 pub struct Lexer<'a> {
-    src: &'a str,
+    pub src: Src<'a>,
     chars: Peekable<CharIndices<'a>>,
 }
 
 impl<'a> Lexer<'a> {
-    pub fn new(src: &'a str) -> Self {
-        Self {
-            src,
-            chars: src.char_indices().peekable(),
-        }
+    pub fn new(src: Src<'a>) -> Self {
+        let chars = src.chars();
+        Self { src, chars }
     }
 
     fn read_token(&mut self) -> Token {
@@ -23,8 +25,8 @@ impl<'a> Lexer<'a> {
         }
 
         let Some((cur_idx, cur_char)) = self.peek() else {
-            let src_len = self.src.len();
-            return Token::new(Eof, (src_len, src_len));
+            let src_ln = self.src.ln();
+            return Token::new(Eof, (src_ln, src_ln));
         };
 
         match cur_char {
@@ -37,7 +39,7 @@ impl<'a> Lexer<'a> {
             '=' => {
                 self.next();
                 if self.peek().is_some_and(|(_, char)| char == '=') {
-                    self.consume_token(DoubleEqual, cur_idx, 2)
+                    self.consume_token(DoubleEquals, cur_idx, 2)
                 } else {
                     self.consume_token(Illegal, cur_idx, 1)
                 }
@@ -61,7 +63,7 @@ impl<'a> Lexer<'a> {
             '!' => {
                 self.next();
                 if self.peek().is_some_and(|(_, char)| char == '=') {
-                    self.consume_token(NotEqual, cur_idx, 2)
+                    self.consume_token(NotEquals, cur_idx, 2)
                 } else {
                     self.consume_token(Illegal, cur_idx, 1)
                 }
@@ -104,7 +106,7 @@ impl<'a> Lexer<'a> {
             let (l, _) = self.next().unwrap();
             last = l;
         }
-        &self.src[position..=last]
+        &self.src.slice(position, last + 1)
     }
 
     fn read_identifier(&mut self, position: usize) -> &'a str {
@@ -116,7 +118,7 @@ impl<'a> Lexer<'a> {
             let (l, _) = self.next().unwrap();
             last = l;
         }
-        &self.src[position..=last]
+        &self.src.slice(position, last + 1)
     }
 }
 
