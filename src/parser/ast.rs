@@ -5,6 +5,7 @@ use crate::lexer::token::{Token, TokenKind};
 #[derive(Debug)]
 pub struct Ast(pub Vec<Expression>); // restructure to global scope expressions and main entry fn
 
+#[derive(Debug)]
 pub enum AstError {
     NoPrefixParse(Token),
     Expected(Token, TokenKind),

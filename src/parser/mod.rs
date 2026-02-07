@@ -1,5 +1,3 @@
-use std::iter::Peekable;
-
 use crate::{
     lexer::{
         Lexer,
@@ -8,7 +6,7 @@ use crate::{
     parser::{
         expression::{Expression, ExpressionKind, InfixOp},
         precedence::Precedence,
-    },
+    }, common::peeker::Peeker,
 };
 use ast::{Ast, AstError};
 
@@ -18,14 +16,14 @@ pub mod precedence;
 
 type LHParseFn = Box<dyn Fn(&mut Parser) -> Result<Expression, AstError>>;
 
-pub struct Parser<'a> {
-    lexer: Lexer<'a>,
-    tokens: Peekable<Lexer<'a>>,
+pub struct Parser {
+    lexer: Lexer,
+    tokens: Peeker<Token>,
 }
 
-impl<'a> Parser<'a> {
-    pub fn new(lexer: Lexer<'a>) -> Self {
-        let tokens = lexer.get_peekable();
+impl Parser {
+    pub fn new(lexer: Lexer) -> Self {
+        let tokens = lexer.get_peeker();
         Self { lexer, tokens }
     }
 
@@ -131,18 +129,17 @@ impl<'a> Parser<'a> {
     fn expect(&mut self, exp: TokenKind) -> Result<Token, AstError> {
         let token = self.consume()?;
         if token.kind == exp {
-            let token = self.tokens.next().ok_or(AstError::eof())?;
             Ok(token)
         } else {
-            Err((&AstError::expected)(token.clone(), exp))
+            Err((&AstError::expected)(token, exp))
         }
     }
 
     fn consume(&mut self) -> Result<Token, AstError> {
-        self.tokens.next().ok_or(AstError::eof())
+        Ok(self.tokens.next().ok_or(AstError::eof())?.0)
     }
 
     fn peek_kind(&mut self) -> &TokenKind {
-        self.tokens.peek().map_or(&TokenKind::Eof, |t| &t.kind)
+        self.tokens.peek().map_or(&TokenKind::Eof, |(t, _)| &t.kind)
     }
 }

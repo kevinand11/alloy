@@ -1,23 +1,26 @@
-use std::{iter::Peekable, str::CharIndices};
-
-use crate::span::Span;
+use crate::common::{span::Span, peeker::Peeker};
 
 #[derive(Clone, Debug)]
-pub struct Module<'a>(pub &'a str);
+pub struct Module {
+    pub src: String,
+}
 
-impl<'a> Module<'a> {
-    pub const fn new(src: &'a str) -> Self {
-        Self(src)
+type IterItem = (char, usize);
+
+impl Module {
+    pub fn new(src: String) -> Self {
+        Self { src }
     }
 
-    pub fn content(&self) -> &str {
-        self.0.as_ref()
+    pub fn get_peeker(&self) -> Peeker<char> {
+        let chars: Vec<char> = self.src.chars().collect();
+        Peeker::new(chars)
     }
 
     pub fn slice(&self, start: usize, end: usize) -> &str {
         // SAFETY: `start` and `end` are UTF-8 char indices, not byte indexes
         // for ascii, this should work fine though
-        &self.0[start..end]
+        &self.src[start..end]
     }
 
     pub fn span_slice(&self, span: &Span) -> &str {
@@ -25,10 +28,6 @@ impl<'a> Module<'a> {
     }
 
     pub fn ln(&self) -> usize {
-        self.0.len()
-    }
-
-    pub fn get_peeker(&self) -> Peekable<CharIndices<'a>> {
-        self.0.char_indices().peekable()
+        self.src.len()
     }
 }

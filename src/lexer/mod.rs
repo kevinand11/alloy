@@ -1,152 +1,120 @@
-use std::{iter::Peekable, str::CharIndices};
+use token::{Token, TokenKind::*};
 
-use token::{Token, TokenKind, TokenKind::*};
-
-use crate::lexer::module::Module;
+use crate::{common::peeker::Peeker, lexer::module::Module};
 
 pub mod module;
 pub mod token;
 
 #[derive(Clone)]
-pub struct Lexer<'a> {
-    pub module: &'a Module<'a>,
-    chars: Peekable<CharIndices<'a>>,
+pub struct Lexer {
+    pub module: Module,
 }
 
-impl<'a> Lexer<'a> {
-    pub fn new(module: &'a Module) -> Self {
-        let chars = module.get_peeker();
-        Self { module, chars }
+impl Lexer {
+    pub fn new(module: Module) -> Self {
+        Self { module }
     }
 
-    pub fn get_peekable(&self) -> Peekable<Self> {
-        // TODO: quite expensive, refactor
-        self.clone().peekable()
+    pub fn get_peeker(&self) -> Peeker<Token> {
+        let mut tokens: Vec<Token> = vec![];
+        let mut char_peeker = self.module.get_peeker();
+        while char_peeker.peek().is_some() {
+            tokens.push(self.next_token(&mut char_peeker));
+        }
+        Peeker::new(tokens)
     }
 
-    fn read_token(&mut self) -> Token {
-        while self.peek().is_some_and(|(_, c)| c.is_whitespace()) {
-            self.next();
+    fn next_token(&self, char_peeker: &mut Peeker<char>) -> Token {
+        while char_peeker.peek().is_some_and(|(c, _)| c.is_whitespace()) {
+            char_peeker.next();
         }
 
-        let Some((cur_idx, cur_char)) = self.peek() else {
-            let src_ln = self.module.ln();
-            return Token::new(Eof, (src_ln, src_ln));
+        let Some((cur_char, cur_idx)) = char_peeker.peek() else {
+            return Token::new(Eof, self.module.ln(), 10);
         };
 
-        match cur_char {
+        let token = match cur_char {
             '#' => {
-                self.next();
+                char_peeker.next();
                 let mut size = 1;
-                while let Some((_, c)) = self.peek() {
+                while let Some((c, _)) = char_peeker.next() {
                     size = size + 1;
-                    self.next();
                     if c == '\n' {
                         break;
                     }
                 }
-                self.consume_token(Comment, cur_idx, size)
+                Token::new(Comment, cur_idx, size)
             }
 
-            '+' => self.consume_token(Plus, cur_idx, 1),
-            '-' => self.consume_token(Minus, cur_idx, 1),
-            '*' => self.consume_token(Asterisk, cur_idx, 1),
-            '/' => self.consume_token(Slash, cur_idx, 1),
-            '^' => self.consume_token(Caret, cur_idx, 1),
+            '+' => Token::new(Plus, cur_idx, 1),
+            '-' => Token::new(Minus, cur_idx, 1),
+            '*' => Token::new(Asterisk, cur_idx, 1),
+            '/' => Token::new(Slash, cur_idx, 1),
+            '^' => Token::new(Caret, cur_idx, 1),
 
             '=' => {
-                self.next();
-                if self.peek().is_some_and(|(_, char)| char == '=') {
-                    self.consume_token(DoubleEquals, cur_idx, 2)
+                char_peeker.next();
+                if char_peeker.peek().is_some_and(|(c, _)| c == &'=') {
+                    Token::new(DoubleEquals, cur_idx, 2)
                 } else {
-                    self.consume_token(Illegal, cur_idx, 1)
+                    Token::new(Illegal, cur_idx, 1)
                 }
             }
             '<' => {
-                self.next();
-                if self.peek().is_some_and(|(_, char)| char == '=') {
-                    self.consume_token(LessThanOrEqual, cur_idx, 2)
+                char_peeker.next();
+                if char_peeker.peek().is_some_and(|(c, _)| c == &'=') {
+                    Token::new(LessThanOrEqual, cur_idx, 2)
                 } else {
-                    self.consume_token(LessThan, cur_idx, 1)
+                    Token::new(LessThan, cur_idx, 1)
                 }
             }
             '>' => {
-                self.next();
-                if self.peek().is_some_and(|(_, char)| char == '=') {
-                    self.consume_token(GreaterThanOrEqual, cur_idx, 2)
+                char_peeker.next();
+                if char_peeker.peek().is_some_and(|(c, _)| c == &'=') {
+                    Token::new(GreaterThanOrEqual, cur_idx, 2)
                 } else {
-                    self.consume_token(GreaterThan, cur_idx, 1)
+                    Token::new(GreaterThan, cur_idx, 1)
                 }
             }
             '!' => {
-                self.next();
-                if self.peek().is_some_and(|(_, char)| char == '=') {
-                    self.consume_token(NotEquals, cur_idx, 2)
+                char_peeker.next();
+                if char_peeker.peek().is_some_and(|(c, _)| c == &'=') {
+                    Token::new(NotEquals, cur_idx, 2)
                 } else {
-                    self.consume_token(Illegal, cur_idx, 1)
+                    Token::new(Illegal, cur_idx, 1)
                 }
             }
 
-            '{' => self.consume_token(LBrace, cur_idx, 1),
-            '}' => self.consume_token(RBrace, cur_idx, 1),
+            '{' => Token::new(LBrace, cur_idx, 1),
+            '}' => Token::new(RBrace, cur_idx, 1),
 
             'a'..='z' | 'A'..='Z' | '_' => {
-                let chars = self.read_identifier(cur_idx);
-                Token::new(Indentifier, (cur_idx, cur_idx + chars.len()))
+                let mut last = cur_idx;
+                while char_peeker
+                    .peek()
+                    .is_some_and(|(c, _)| c.is_ascii_alphanumeric() || c == &'_')
+                {
+                    let (_, l) = char_peeker.next().unwrap();
+                    last = l;
+                }
+                let chars = &self.module.slice(cur_idx, last + 1);
+                Token::new(Indentifier, cur_idx, chars.len())
             }
             '0'..='9' => {
-                let chars = self.read_number(cur_idx);
-                Token::new(LiteralInt, (cur_idx, cur_idx + chars.len()))
+                let mut last = cur_idx;
+                while char_peeker.peek().is_some_and(|(c, _)| c.is_ascii_digit()) {
+                    let (_, l) = char_peeker.next().unwrap();
+                    last = l;
+                }
+                let chars = &self.module.slice(cur_idx, last + 1);
+                Token::new(LiteralInt, cur_idx, chars.len())
             }
 
-            _ => self.consume_token(Illegal, cur_idx, 1),
-        }
-    }
+            _ => Token::new(Illegal, cur_idx, 1),
+        };
 
-    fn peek(&mut self) -> Option<(usize, char)> {
-        self.chars.peek().copied()
-    }
+        char_peeker.next();
 
-    fn next(&mut self) -> Option<(usize, char)> {
-        self.chars.next()
-    }
-
-    fn consume_token(&mut self, kind: TokenKind, position: usize, len: usize) -> Token {
-        let token = Token::new(kind, (position, position + len));
-        self.next();
         token
-    }
-
-    fn read_number(&mut self, position: usize) -> &str {
-        let mut last = position;
-        while self.peek().is_some_and(|(_, c)| c.is_ascii_digit()) {
-            let (l, _) = self.next().unwrap();
-            last = l;
-        }
-        &self.module.slice(position, last + 1)
-    }
-
-    fn read_identifier(&mut self, position: usize) -> &str {
-        let mut last = position;
-        while self
-            .peek()
-            .is_some_and(|(_, c)| c.is_ascii_alphanumeric() || c == '_')
-        {
-            let (l, _) = self.next().unwrap();
-            last = l;
-        }
-        &self.module.slice(position, last + 1)
-    }
-}
-
-impl Iterator for Lexer<'_> {
-    type Item = Token;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let tok = self.read_token();
-        match tok.kind {
-            TokenKind::Eof => None,
-            _ => Some(tok),
-        }
     }
 }

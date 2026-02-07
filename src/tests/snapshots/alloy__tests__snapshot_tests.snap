@@ -208,37 +208,9 @@ input_file: src/tests/cases/syntax.alloy
         ),
     },
     Token {
-        kind: RBrace,
+        kind: Comment,
         span: Span(
             78,
-            79,
-        ),
-    },
-    Token {
-        kind: Indentifier,
-        span: Span(
-            80,
-            81,
-        ),
-    },
-    Token {
-        kind: Indentifier,
-        span: Span(
-            82,
-            87,
-        ),
-    },
-    Token {
-        kind: Indentifier,
-        span: Span(
-            88,
-            90,
-        ),
-    },
-    Token {
-        kind: Indentifier,
-        span: Span(
-            91,
             95,
         ),
     },

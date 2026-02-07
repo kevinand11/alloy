@@ -1,4 +1,4 @@
-use crate::span::Span;
+use crate::common::span::Span;
 
 #[derive(Clone, Debug)]
 pub struct Token {
@@ -34,10 +34,10 @@ pub enum TokenKind {
 }
 
 impl Token {
-    pub fn new(kind: TokenKind, (start, end): (usize, usize)) -> Self {
+    pub fn new(kind: TokenKind, position: usize, len: usize) -> Self {
         Token {
             kind,
-            span: Span::from_range(start, end),
+            span: Span::from_range(position, position + len),
         }
     }
 }

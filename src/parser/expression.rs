@@ -1,4 +1,4 @@
-use crate::span::Span;
+use crate::common::span::Span;
 
 #[derive(Debug)]
 pub enum ExpressionKind {
