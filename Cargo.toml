@@ -1,0 +1,28 @@
+[package]
+name = "alloy"
+version = "0.1.0"
+edition = "2024"
+description = "An alloyed systems programming language"
+keywords = ["compiler", "language", "systems programming"]
+repository = "https://github.com/kevinand11/alloy"
+categories = ["compilers"]
+license = "none"
+
+[dependencies]
+clap = { version = "4.5.57", features = ["derive"] }
+colored = "3.1.1"
+toml = "0.9.10"
+
+[dev-dependencies]
+insta = "1.46.3"
+pretty_assertions = "1.4.1"
+
+[lints.clippy]
+pedantic = "warn"
+nursery = "warn"
+perf = "warn"
+correctness = "warn"
+suspicious = "warn"
+style = "warn"
+complexity = "warn"
+cargo = "warn"
