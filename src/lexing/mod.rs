@@ -1,6 +1,6 @@
 use token::{Token, TokenKind::*};
 
-use crate::{common::peeker::Peeker, lexer::module::Module};
+use crate::{common::peeker::Peeker, lexing::module::Module};
 
 pub mod module;
 pub mod token;

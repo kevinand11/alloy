@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
 mod common;
-mod lexer;
-mod parser;
+mod lexing;
+mod parsing;
 
 #[cfg(test)]
 mod tests;

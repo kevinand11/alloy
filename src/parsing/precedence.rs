@@ -1,4 +1,4 @@
-use crate::lexer::token::TokenKind::{self, *};
+use crate::lexing::token::TokenKind::{self, *};
 
 #[derive(Clone, PartialEq, PartialOrd)]
 pub enum Precedence {

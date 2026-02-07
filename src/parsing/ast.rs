@@ -1,6 +1,6 @@
 use super::expression::Expression;
 
-use crate::lexer::token::{Token, TokenKind};
+use crate::lexing::token::{Token, TokenKind};
 
 #[derive(Debug)]
 pub struct Ast(pub Vec<Expression>); // restructure to global scope expressions and main entry fn

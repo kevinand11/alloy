@@ -1,4 +1,4 @@
-use crate::{common::{peeker::Peeker, span::Span}, lexer::token::Token};
+use crate::{common::{peeker::Peeker, span::Span}, lexing::token::Token};
 
 #[derive(Clone, Debug)]
 pub struct Module {

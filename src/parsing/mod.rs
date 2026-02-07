@@ -1,10 +1,10 @@
 use crate::{
     common::peeker::Peeker,
-    lexer::{
+    lexing::{
         Lexer,
         token::{Token, TokenKind},
     },
-    parser::{
+    parsing::{
         expression::{Expression, ExpressionKind, InfixOp, PrefixOp, VarType},
         precedence::Precedence,
     },

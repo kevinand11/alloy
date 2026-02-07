@@ -2,8 +2,8 @@ use insta::glob;
 use std::fs;
 
 use crate::{
-    lexer::{Lexer, module::Module},
-    parser::Parser,
+    lexing::{Lexer, module::Module},
+    parsing::Parser,
 };
 
 #[test]
