@@ -140,11 +140,23 @@ impl Parser {
     }
 
     fn parse_literal_number(&mut self) -> Result<Expression, AstError> {
-        // TODO: check if text has a . in it and parse to float instead
         let token = self.expect(TokenKind::Number)?;
-        let span = token.span;
-        let num = self.lexer.module.span_slice(&span).parse().unwrap();
-        Ok(Expression::new(ExpressionKind::LiteralInt(num), span))
+		let span = token.span;
+
+        let raw = self.lexer.module.span_slice(&span);
+        let cleaned: String = raw.chars().filter(|c| *c != '_').collect();
+
+        if cleaned.contains('.') {
+            let num: f32 = cleaned
+                .parse()
+                .map_err(|_| AstError::syntax(token, "invalid float"))?;
+            Ok(Expression::new(ExpressionKind::LiteralFloat(num), span))
+        } else {
+            let num: isize = cleaned
+                .parse()
+                .map_err(|_| AstError::syntax(token, "invalid int"))?;
+            Ok(Expression::new(ExpressionKind::LiteralInt(num), span))
+        }
     }
 
     fn expect(&mut self, exp: TokenKind) -> Result<Token, AstError> {

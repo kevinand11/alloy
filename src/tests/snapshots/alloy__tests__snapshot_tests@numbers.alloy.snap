@@ -1,0 +1,42 @@
+---
+source: src/tests/mod.rs
+expression: tokens
+input_file: src/tests/cases/numbers.alloy
+---
+[
+    Token {
+        kind: Number,
+        span: Span(
+            0,
+            3,
+        ),
+    },
+    Token {
+        kind: Plus,
+        span: Span(
+            4,
+            5,
+        ),
+    },
+    Token {
+        kind: Number,
+        span: Span(
+            6,
+            13,
+        ),
+    },
+    Token {
+        kind: Plus,
+        span: Span(
+            14,
+            15,
+        ),
+    },
+    Token {
+        kind: Number,
+        span: Span(
+            16,
+            20,
+        ),
+    },
+]

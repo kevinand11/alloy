@@ -104,14 +104,22 @@ impl Lexer {
                 Token::new(Indentifier, cur_idx, chars.len())
             }
             '0'..='9' => {
-                let mut last = cur_idx;
-                while char_peeker.peek().is_some_and(|(c, _)| c.is_ascii_digit()) {
-                    let (_, l) = char_peeker.next().unwrap();
-                    last = l;
-                }
+                let last = self.read_number(char_peeker, cur_idx);
                 let chars = &self.module.slice(cur_idx, last + 1);
                 call_next = false;
                 Token::new(Number, cur_idx, chars.len())
+            }
+
+            '.' => {
+                char_peeker.next();
+                if char_peeker.peek().is_some_and(|(c, _)| c.is_ascii_digit()) {
+                    let last = self.read_number(char_peeker, cur_idx);
+                    let chars = &self.module.slice(cur_idx, last + 1);
+                    call_next = false;
+                    Token::new(Number, cur_idx, chars.len())
+                } else {
+                    Token::new(Illegal, cur_idx, 1)
+                }
             }
 
             _ => Token::new(Illegal, cur_idx, 1),
@@ -122,5 +130,31 @@ impl Lexer {
         }
 
         Some(token)
+    }
+
+    fn read_number(&self, char_peeker: &mut Peeker<char>, start: usize) -> usize {
+        let mut last = start;
+        let mut seen_dot = false;
+
+        while let Some((c, _)) = char_peeker.peek() {
+            match *c {
+                '0'..='9' => {
+                    let (_, l) = char_peeker.next().unwrap();
+                    last = l;
+                }
+                '_' => {
+                    let (_, l) = char_peeker.next().unwrap();
+                    last = l;
+                }
+                '.' if !seen_dot => {
+                    let (_, l) = char_peeker.next().unwrap();
+                    last = l;
+                    seen_dot = true;
+                }
+                _ => break,
+            }
+        }
+
+        last
     }
 }
