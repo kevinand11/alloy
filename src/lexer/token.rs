@@ -23,6 +23,7 @@ pub enum TokenKind {
 
     LBrace,
     RBrace,
+    Exclamation,
 
     LiteralInt,
     LiteralFloat,
@@ -37,7 +38,7 @@ impl Token {
     pub fn new(kind: TokenKind, position: usize, len: usize) -> Self {
         Token {
             kind,
-            span: Span::from_range(position, position + len),
+            span: Span::new(position, position + len),
         }
     }
 }

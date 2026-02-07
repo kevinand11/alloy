@@ -24,7 +24,6 @@ pub enum ExpressionKind {
 #[derive(Debug)]
 pub enum PrefixOp {
     Not,
-    Negate,
 }
 
 #[derive(Debug)]

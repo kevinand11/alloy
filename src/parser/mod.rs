@@ -1,12 +1,13 @@
 use crate::{
+    common::peeker::Peeker,
     lexer::{
         Lexer,
         token::{Token, TokenKind},
     },
     parser::{
-        expression::{Expression, ExpressionKind, InfixOp},
+        expression::{Expression, ExpressionKind, InfixOp, PrefixOp},
         precedence::Precedence,
-    }, common::peeker::Peeker,
+    },
 };
 use ast::{Ast, AstError};
 
@@ -36,10 +37,9 @@ impl Parser {
     }
 
     fn parse_expression(&mut self, precedence: Precedence) -> Result<Expression, AstError> {
-		let mut expr = self.get_lh_parse_fn()?(self)?;
+        let mut expr = self.get_lh_parse_fn()?(self)?;
 
         while Precedence::of(self.peek_kind()) > precedence {
-
             expr = match self.peek_kind() {
                 TokenKind::LiteralInt | TokenKind::LiteralFloat => {
                     unreachable!("lexed 2 numbers next to each other")
@@ -106,9 +106,23 @@ impl Parser {
             }
             TokenKind::LiteralInt => Ok(Box::new(|parser| parser.parse_literal_number(false))),
             TokenKind::LiteralFloat => Ok(Box::new(|parser| parser.parse_literal_number(true))),
+            TokenKind::Exclamation => Ok(Box::new(|parser| parser.parse_prefix_expr(PrefixOp::Not))),
             _ => Err(AstError::no_prefix_parse(self.consume()?)),
         }
     }
+
+	fn parse_prefix_expr(&mut self, op: PrefixOp) -> Result<Expression, AstError> {
+		let excl_token = self.consume()?;
+		let expr = self.parse_expression(Precedence::Prefix)?;
+		let new_span = excl_token.span.to(&expr.span);
+		Ok(Expression::new(
+			ExpressionKind::Prefix {
+				op,
+				rh: Box::new(expr),
+			},
+			new_span,
+		))
+	}
 
     fn parse_literal_number(&mut self, float: bool) -> Result<Expression, AstError> {
         let token = self.expect(if float {

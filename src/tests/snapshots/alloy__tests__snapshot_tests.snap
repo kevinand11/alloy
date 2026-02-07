@@ -200,4 +200,18 @@ input_file: src/tests/cases/maths.alloy
             68,
         ),
     },
+    Token {
+        kind: Exclamation,
+        span: Span(
+            70,
+            71,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            72,
+            73,
+        ),
+    },
 ]

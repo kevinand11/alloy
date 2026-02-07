@@ -81,7 +81,7 @@ impl Lexer {
                 if char_peeker.peek().is_some_and(|(c, _)| c == &'=') {
                     Token::new(NotEquals, cur_idx, 2)
                 } else {
-                    Token::new(Illegal, cur_idx, 1)
+                    Token::new(Exclamation, cur_idx, 1)
                 }
             }
 

@@ -257,5 +257,23 @@ Ast(
                 68,
             ),
         },
+        Expression {
+            kind: Prefix {
+                op: Not,
+                rh: Expression {
+                    kind: LiteralInt(
+                        7,
+                    ),
+                    span: Span(
+                        72,
+                        73,
+                    ),
+                },
+            },
+            span: Span(
+                70,
+                73,
+            ),
+        },
     ],
 )
