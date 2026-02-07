@@ -3,6 +3,7 @@ use crate::span::Span;
 #[derive(Debug)]
 pub enum ExpressionKind {
     LiteralInt(isize),
+    LiteralFloat(f32),
     LiteralBool(bool),
     Ident(String),
 

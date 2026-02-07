@@ -1,0 +1,218 @@
+---
+source: src/tests/mod.rs
+assertion_line: 15
+expression: tokens
+input_file: src/tests/cases/syntax.alloy
+---
+[
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            0,
+            1,
+        ),
+    },
+    Token {
+        kind: Plus,
+        span: Span(
+            2,
+            3,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            4,
+            5,
+        ),
+    },
+    Token {
+        kind: Asterisk,
+        span: Span(
+            6,
+            7,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            8,
+            9,
+        ),
+    },
+    Token {
+        kind: Slash,
+        span: Span(
+            10,
+            11,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            12,
+            13,
+        ),
+    },
+    Token {
+        kind: Caret,
+        span: Span(
+            14,
+            15,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            16,
+            17,
+        ),
+    },
+    Token {
+        kind: Indentifier,
+        span: Span(
+            19,
+            23,
+        ),
+    },
+    Token {
+        kind: Indentifier,
+        span: Span(
+            24,
+            28,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            30,
+            31,
+        ),
+    },
+    Token {
+        kind: LessThan,
+        span: Span(
+            32,
+            33,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            34,
+            35,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            36,
+            37,
+        ),
+    },
+    Token {
+        kind: GreaterThan,
+        span: Span(
+            38,
+            39,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            40,
+            41,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            42,
+            43,
+        ),
+    },
+    Token {
+        kind: LessThanOrEqual,
+        span: Span(
+            44,
+            46,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            47,
+            49,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            50,
+            52,
+        ),
+    },
+    Token {
+        kind: GreaterThanOrEqual,
+        span: Span(
+            53,
+            55,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            56,
+            58,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            59,
+            61,
+        ),
+    },
+    Token {
+        kind: DoubleEquals,
+        span: Span(
+            62,
+            64,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            65,
+            67,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            68,
+            70,
+        ),
+    },
+    Token {
+        kind: NotEquals,
+        span: Span(
+            71,
+            73,
+        ),
+    },
+    Token {
+        kind: LiteralInt,
+        span: Span(
+            74,
+            76,
+        ),
+    },
+    Token {
+        kind: Comment,
+        span: Span(
+            78,
+            95,
+        ),
+    },
+]

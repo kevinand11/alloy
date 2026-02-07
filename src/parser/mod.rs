@@ -42,21 +42,32 @@ impl<'a> Parser<'a> {
     }
 
     fn get_lh_parse_fn(&mut self) -> Result<LHParseFn, AstError> {
-        match self.peek()?.kind {
-            TokenKind::LiteralInt => Ok(Box::new(|parser| parser.parse_literal_int())),
-            _ => todo!(),
+		let peek = self.peek()?;
+        match peek.kind {
+            TokenKind::LiteralInt => Ok(Box::new(|parser| parser.parse_literal_number(false))),
+            TokenKind::LiteralFloat => Ok(Box::new(|parser| parser.parse_literal_number(true))),
+            _ => Err(AstError::NoPrefixParse(peek.kind)),
         }
     }
 
-    fn parse_literal_int(&mut self) -> Result<Expression, AstError> {
-        let token = self.expect(TokenKind::LiteralInt)?;
+    fn parse_literal_number(&mut self, float: bool) -> Result<Expression, AstError> {
+        let token = self.expect(if float {
+            TokenKind::LiteralFloat
+        } else {
+            TokenKind::LiteralInt
+        })?;
         let span = token.span;
-        let num = self.lexer.module.span_slice(&span).parse().unwrap();
-        Ok(Expression::new(ExpressionKind::LiteralInt(num), span))
+        if float {
+            let num = self.lexer.module.span_slice(&span).parse().unwrap();
+            Ok(Expression::new(ExpressionKind::LiteralFloat(num), span))
+        } else {
+            let num = self.lexer.module.span_slice(&span).parse().unwrap();
+            Ok(Expression::new(ExpressionKind::LiteralInt(num), span))
+        }
     }
 
     fn expect(&mut self, exp: TokenKind) -> Result<Token, AstError> {
-		let token = self.peek()?;
+        let token = self.peek()?;
         if token.kind == exp {
             self.tokens.next();
             Ok(self.cur()?)

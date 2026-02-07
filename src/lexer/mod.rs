@@ -35,6 +35,19 @@ impl<'a> Lexer<'a> {
         };
 
         match cur_char {
+            '#' => {
+                self.next();
+                let mut size = 1;
+                while let Some((_, c)) = self.peek() {
+                    size = size + 1;
+                    self.next();
+                    if c == '\n' {
+                        break;
+                    }
+                }
+                self.consume_token(Comment, cur_idx, size)
+            }
+
             '+' => self.consume_token(Plus, cur_idx, 1),
             '-' => self.consume_token(Minus, cur_idx, 1),
             '*' => self.consume_token(Asterisk, cur_idx, 1),
@@ -76,7 +89,6 @@ impl<'a> Lexer<'a> {
 
             '{' => self.consume_token(LBrace, cur_idx, 1),
             '}' => self.consume_token(RBrace, cur_idx, 1),
-            '#' => self.consume_token(RBrace, cur_idx, 1),
 
             'a'..='z' | 'A'..='Z' | '_' => {
                 let chars = self.read_identifier(cur_idx);

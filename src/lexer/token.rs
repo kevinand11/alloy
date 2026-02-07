@@ -26,8 +26,10 @@ pub enum TokenKind {
     Hash,
 
     LiteralInt,
+    LiteralFloat,
     Indentifier,
 
+    Comment,
     Illegal,
     Eof,
 }
