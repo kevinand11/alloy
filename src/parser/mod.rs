@@ -41,7 +41,7 @@ impl Parser {
 
         while Precedence::of(self.peek_kind()) > precedence {
             expr = match self.peek_kind() {
-                TokenKind::LiteralInt | TokenKind::LiteralFloat => {
+                TokenKind::Number => {
                     unreachable!("lexed 2 numbers next to each other")
                 }
 
@@ -104,40 +104,47 @@ impl Parser {
                 self.expect(TokenKind::Comment)?;
                 self.get_lh_parse_fn()
             }
-            TokenKind::LiteralInt => Ok(Box::new(|parser| parser.parse_literal_number(false))),
-            TokenKind::LiteralFloat => Ok(Box::new(|parser| parser.parse_literal_number(true))),
-            TokenKind::Exclamation => Ok(Box::new(|parser| parser.parse_prefix_expr(PrefixOp::Not))),
+            TokenKind::Number => Ok(Box::new(|parser| parser.parse_literal_number())),
+            TokenKind::Exclamation => Ok(Box::new(|parser| {
+                parser.parse_prefix_expression(PrefixOp::Not)
+            })),
+            TokenKind::LBrace => Ok(Box::new(|parser| parser.parse_block_expression())),
             _ => Err(AstError::no_prefix_parse(self.consume()?)),
         }
     }
 
-	fn parse_prefix_expr(&mut self, op: PrefixOp) -> Result<Expression, AstError> {
-		let excl_token = self.consume()?;
-		let expr = self.parse_expression(Precedence::Prefix)?;
-		let new_span = excl_token.span.to(&expr.span);
-		Ok(Expression::new(
-			ExpressionKind::Prefix {
-				op,
-				rh: Box::new(expr),
-			},
-			new_span,
-		))
-	}
-
-    fn parse_literal_number(&mut self, float: bool) -> Result<Expression, AstError> {
-        let token = self.expect(if float {
-            TokenKind::LiteralFloat
-        } else {
-            TokenKind::LiteralInt
-        })?;
-        let span = token.span;
-        if float {
-            let num = self.lexer.module.span_slice(&span).parse().unwrap();
-            Ok(Expression::new(ExpressionKind::LiteralFloat(num), span))
-        } else {
-            let num = self.lexer.module.span_slice(&span).parse().unwrap();
-            Ok(Expression::new(ExpressionKind::LiteralInt(num), span))
+    fn parse_block_expression(&mut self) -> Result<Expression, AstError> {
+        let start = self.expect(TokenKind::LBrace)?;
+        let mut exprs = vec![];
+        while self.peek_kind() != &TokenKind::RBrace {
+            exprs.push(self.parse_expression(Precedence::Lowest)?);
         }
+        let end = self.expect(TokenKind::RBrace)?;
+        Ok(Expression::new(
+            ExpressionKind::Block(exprs),
+            start.span.to(&end.span),
+        ))
+    }
+
+    fn parse_prefix_expression(&mut self, op: PrefixOp) -> Result<Expression, AstError> {
+        let start = self.expect(TokenKind::Exclamation)?;
+        let expr = self.parse_expression(Precedence::Prefix)?;
+        let new_span = start.span.to(&expr.span);
+        Ok(Expression::new(
+            ExpressionKind::Prefix {
+                op,
+                rh: Box::new(expr),
+            },
+            new_span,
+        ))
+    }
+
+    fn parse_literal_number(&mut self) -> Result<Expression, AstError> {
+        // TODO: check if text has a . in it and parse to float instead
+        let token = self.expect(TokenKind::Number)?;
+        let span = token.span;
+        let num = self.lexer.module.span_slice(&span).parse().unwrap();
+        Ok(Expression::new(ExpressionKind::LiteralInt(num), span))
     }
 
     fn expect(&mut self, exp: TokenKind) -> Result<Token, AstError> {

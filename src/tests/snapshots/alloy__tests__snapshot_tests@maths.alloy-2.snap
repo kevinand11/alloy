@@ -78,20 +78,29 @@ Ast(
             ),
         },
         Expression {
-            kind: LiteralInt(
-                4,
-            ),
+            kind: Infix {
+                op: Power,
+                lh: Expression {
+                    kind: LiteralInt(
+                        4,
+                    ),
+                    span: Span(
+                        17,
+                        18,
+                    ),
+                },
+                rh: Expression {
+                    kind: LiteralInt(
+                        3,
+                    ),
+                    span: Span(
+                        19,
+                        20,
+                    ),
+                },
+            },
             span: Span(
                 17,
-                18,
-            ),
-        },
-        Expression {
-            kind: LiteralInt(
-                3,
-            ),
-            span: Span(
-                19,
                 20,
             ),
         },

@@ -18,20 +18,22 @@ impl Lexer {
     pub fn get_peeker(&self) -> Peeker<Token> {
         let mut tokens: Vec<Token> = vec![];
         let mut char_peeker = self.module.get_peeker();
-        while char_peeker.peek().is_some() {
-            tokens.push(self.next_token(&mut char_peeker));
+        while let Some(token) = self.next_token(&mut char_peeker) {
+            tokens.push(token);
         }
         Peeker::new(tokens)
     }
 
-    fn next_token(&self, char_peeker: &mut Peeker<char>) -> Token {
+    fn next_token(&self, char_peeker: &mut Peeker<char>) -> Option<Token> {
         while char_peeker.peek().is_some_and(|(c, _)| c.is_whitespace()) {
             char_peeker.next();
         }
 
         let Some((cur_char, cur_idx)) = char_peeker.peek() else {
-            return Token::new(Eof, self.module.ln(), 10);
+            return None;
         };
+
+        let mut call_next = true;
 
         let token = match cur_char {
             '#' => {
@@ -98,6 +100,7 @@ impl Lexer {
                     last = l;
                 }
                 let chars = &self.module.slice(cur_idx, last + 1);
+                call_next = false;
                 Token::new(Indentifier, cur_idx, chars.len())
             }
             '0'..='9' => {
@@ -107,14 +110,17 @@ impl Lexer {
                     last = l;
                 }
                 let chars = &self.module.slice(cur_idx, last + 1);
-                Token::new(LiteralInt, cur_idx, chars.len())
+                call_next = false;
+                Token::new(Number, cur_idx, chars.len())
             }
 
             _ => Token::new(Illegal, cur_idx, 1),
         };
 
-        char_peeker.next();
+        if call_next {
+            char_peeker.next();
+        }
 
-        token
+        Some(token)
     }
 }

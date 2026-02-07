@@ -20,6 +20,9 @@ fn snapshot_tests() {
 
         let mut parser = Parser::new(lexer);
         let ast = parser.parse();
+        if ast.is_err() {
+            println!("err {:?}", ast)
+        }
         assert!(ast.is_ok());
         insta::assert_debug_snapshot!(ast.unwrap());
     });

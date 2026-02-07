@@ -25,8 +25,7 @@ pub enum TokenKind {
     RBrace,
     Exclamation,
 
-    LiteralInt,
-    LiteralFloat,
+    Number,
     Indentifier,
 
     Comment,

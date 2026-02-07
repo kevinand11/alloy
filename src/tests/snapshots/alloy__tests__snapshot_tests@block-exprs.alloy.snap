@@ -1,0 +1,98 @@
+---
+source: src/tests/mod.rs
+expression: tokens
+input_file: src/tests/cases/block-exprs.alloy
+---
+[
+    Token {
+        kind: Number,
+        span: Span(
+            0,
+            2,
+        ),
+    },
+    Token {
+        kind: Asterisk,
+        span: Span(
+            2,
+            3,
+        ),
+    },
+    Token {
+        kind: LBrace,
+        span: Span(
+            4,
+            5,
+        ),
+    },
+    Token {
+        kind: Number,
+        span: Span(
+            6,
+            7,
+        ),
+    },
+    Token {
+        kind: Plus,
+        span: Span(
+            8,
+            9,
+        ),
+    },
+    Token {
+        kind: Number,
+        span: Span(
+            10,
+            11,
+        ),
+    },
+    Token {
+        kind: RBrace,
+        span: Span(
+            12,
+            13,
+        ),
+    },
+    Token {
+        kind: Minus,
+        span: Span(
+            14,
+            15,
+        ),
+    },
+    Token {
+        kind: LBrace,
+        span: Span(
+            16,
+            17,
+        ),
+    },
+    Token {
+        kind: Number,
+        span: Span(
+            17,
+            18,
+        ),
+    },
+    Token {
+        kind: RBrace,
+        span: Span(
+            18,
+            19,
+        ),
+    },
+    Token {
+        kind: Caret,
+        span: Span(
+            20,
+            21,
+        ),
+    },
+    Token {
+        kind: Number,
+        span: Span(
+            22,
+            23,
+        ),
+    },
+]

@@ -1,0 +1,110 @@
+---
+source: src/tests/mod.rs
+expression: ast.unwrap()
+input_file: src/tests/cases/block-exprs.alloy
+---
+Ast(
+    [
+        Expression {
+            kind: Infix {
+                op: Subtract,
+                lh: Expression {
+                    kind: Infix {
+                        op: Multiply,
+                        lh: Expression {
+                            kind: LiteralInt(
+                                12,
+                            ),
+                            span: Span(
+                                0,
+                                2,
+                            ),
+                        },
+                        rh: Expression {
+                            kind: Block(
+                                [
+                                    Expression {
+                                        kind: Infix {
+                                            op: Add,
+                                            lh: Expression {
+                                                kind: LiteralInt(
+                                                    4,
+                                                ),
+                                                span: Span(
+                                                    6,
+                                                    7,
+                                                ),
+                                            },
+                                            rh: Expression {
+                                                kind: LiteralInt(
+                                                    5,
+                                                ),
+                                                span: Span(
+                                                    10,
+                                                    11,
+                                                ),
+                                            },
+                                        },
+                                        span: Span(
+                                            6,
+                                            11,
+                                        ),
+                                    },
+                                ],
+                            ),
+                            span: Span(
+                                4,
+                                13,
+                            ),
+                        },
+                    },
+                    span: Span(
+                        0,
+                        13,
+                    ),
+                },
+                rh: Expression {
+                    kind: Infix {
+                        op: Power,
+                        lh: Expression {
+                            kind: Block(
+                                [
+                                    Expression {
+                                        kind: LiteralInt(
+                                            7,
+                                        ),
+                                        span: Span(
+                                            17,
+                                            18,
+                                        ),
+                                    },
+                                ],
+                            ),
+                            span: Span(
+                                16,
+                                19,
+                            ),
+                        },
+                        rh: Expression {
+                            kind: LiteralInt(
+                                2,
+                            ),
+                            span: Span(
+                                22,
+                                23,
+                            ),
+                        },
+                    },
+                    span: Span(
+                        16,
+                        23,
+                    ),
+                },
+            },
+            span: Span(
+                0,
+                23,
+            ),
+        },
+    ],
+)

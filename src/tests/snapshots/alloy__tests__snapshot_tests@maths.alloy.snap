@@ -5,7 +5,7 @@ input_file: src/tests/cases/maths.alloy
 ---
 [
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             0,
             1,
@@ -19,7 +19,7 @@ input_file: src/tests/cases/maths.alloy
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             4,
             5,
@@ -33,14 +33,14 @@ input_file: src/tests/cases/maths.alloy
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             8,
             9,
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             11,
             12,
@@ -54,28 +54,35 @@ input_file: src/tests/cases/maths.alloy
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             14,
             15,
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             17,
             18,
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Caret,
+        span: Span(
+            18,
+            19,
+        ),
+    },
+    Token {
+        kind: Number,
         span: Span(
             19,
             20,
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             22,
             23,
@@ -89,14 +96,14 @@ input_file: src/tests/cases/maths.alloy
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             26,
             27,
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             28,
             29,
@@ -110,14 +117,14 @@ input_file: src/tests/cases/maths.alloy
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             32,
             33,
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             34,
             35,
@@ -131,14 +138,14 @@ input_file: src/tests/cases/maths.alloy
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             39,
             41,
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             42,
             44,
@@ -152,14 +159,14 @@ input_file: src/tests/cases/maths.alloy
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             48,
             50,
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             51,
             53,
@@ -173,14 +180,14 @@ input_file: src/tests/cases/maths.alloy
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             57,
             59,
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             60,
             62,
@@ -194,7 +201,7 @@ input_file: src/tests/cases/maths.alloy
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             66,
             68,
@@ -208,7 +215,7 @@ input_file: src/tests/cases/maths.alloy
         ),
     },
     Token {
-        kind: LiteralInt,
+        kind: Number,
         span: Span(
             72,
             73,
