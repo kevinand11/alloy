@@ -2,3 +2,10 @@ a :: 2
 b := 3
 c :Int = a + b
 !c
+
+
+d :: true
+e :: false
+
+f :: !d
+g :: !!e

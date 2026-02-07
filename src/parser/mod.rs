@@ -102,6 +102,7 @@ impl Parser {
                 self.consume()?;
                 self.get_first_expression()
             }
+			TokenKind::Boolean => self.parse_boolean(),
             TokenKind::Number => self.parse_number(),
             TokenKind::Exclamation => self.parse_prefix_expression(PrefixOp::Not),
             TokenKind::LBrace => self.parse_block_expression(),
@@ -161,6 +162,19 @@ impl Parser {
             Ok(Expression::new(ExpressionKind::LiteralInt(num), span))
         }
     }
+
+	fn parse_boolean(&mut self) -> Result<Expression, AstError> {
+		let token = self.expect(TokenKind::Boolean)?;
+        let span = token.span;
+
+		let value = match self.lexer.module.token(&token) {
+			"true" => true,
+			"false" => false,
+			_ => return Err(AstError::syntax(token, "invalid bool"))
+		};
+
+		Ok(Expression::new(ExpressionKind::LiteralBool(value), span))
+	}
 
     fn parse_type(&mut self) -> Result<VarType, AstError> {
         let token = self.expect(TokenKind::Ident)?;

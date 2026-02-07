@@ -105,5 +105,112 @@ Ast(
                 31,
             ),
         },
+        Expression {
+            kind: VariableDecl {
+                name: "d",
+                value: Expression {
+                    kind: LiteralBool(
+                        true,
+                    ),
+                    span: Span(
+                        39,
+                        43,
+                    ),
+                },
+                mutable: false,
+                ty: None,
+            },
+            span: Span(
+                34,
+                43,
+            ),
+        },
+        Expression {
+            kind: VariableDecl {
+                name: "e",
+                value: Expression {
+                    kind: LiteralBool(
+                        false,
+                    ),
+                    span: Span(
+                        49,
+                        54,
+                    ),
+                },
+                mutable: false,
+                ty: None,
+            },
+            span: Span(
+                44,
+                54,
+            ),
+        },
+        Expression {
+            kind: VariableDecl {
+                name: "f",
+                value: Expression {
+                    kind: Prefix {
+                        op: Not,
+                        rh: Expression {
+                            kind: Ident(
+                                "d",
+                            ),
+                            span: Span(
+                                62,
+                                63,
+                            ),
+                        },
+                    },
+                    span: Span(
+                        61,
+                        63,
+                    ),
+                },
+                mutable: false,
+                ty: None,
+            },
+            span: Span(
+                56,
+                63,
+            ),
+        },
+        Expression {
+            kind: VariableDecl {
+                name: "g",
+                value: Expression {
+                    kind: Prefix {
+                        op: Not,
+                        rh: Expression {
+                            kind: Prefix {
+                                op: Not,
+                                rh: Expression {
+                                    kind: Ident(
+                                        "e",
+                                    ),
+                                    span: Span(
+                                        71,
+                                        72,
+                                    ),
+                                },
+                            },
+                            span: Span(
+                                70,
+                                72,
+                            ),
+                        },
+                    },
+                    span: Span(
+                        69,
+                        72,
+                    ),
+                },
+                mutable: false,
+                ty: None,
+            },
+            span: Span(
+                64,
+                72,
+            ),
+        },
     ],
 )

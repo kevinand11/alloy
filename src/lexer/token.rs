@@ -28,6 +28,7 @@ pub enum TokenKind {
     Equals,
 
     Number,
+    Boolean,
     Ident,
 
     Comment,

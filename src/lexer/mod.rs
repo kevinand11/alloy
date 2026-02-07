@@ -104,9 +104,13 @@ impl Lexer {
                     let (_, l) = char_peeker.next().unwrap();
                     last = l;
                 }
-                let chars = &self.module.slice(cur_idx, last + 1);
+                let chars = self.module.slice(cur_idx, last + 1);
                 call_next = false;
-                Token::new(Ident, cur_idx, chars.len())
+                match chars {
+                    "true" => Token::new(Boolean, cur_idx, 4),
+                    "false" => Token::new(Boolean, cur_idx, 5),
+                    _ => Token::new(Ident, cur_idx, chars.len()),
+                }
             }
             '0'..='9' => {
                 let last = self.read_number(char_peeker, cur_idx);

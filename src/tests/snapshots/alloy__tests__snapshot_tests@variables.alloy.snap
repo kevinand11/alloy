@@ -123,4 +123,137 @@ input_file: src/tests/cases/variables.alloy
             31,
         ),
     },
+    Token {
+        kind: Ident,
+        span: Span(
+            34,
+            35,
+        ),
+    },
+    Token {
+        kind: Colon,
+        span: Span(
+            36,
+            37,
+        ),
+    },
+    Token {
+        kind: Colon,
+        span: Span(
+            37,
+            38,
+        ),
+    },
+    Token {
+        kind: Boolean,
+        span: Span(
+            39,
+            43,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            44,
+            45,
+        ),
+    },
+    Token {
+        kind: Colon,
+        span: Span(
+            46,
+            47,
+        ),
+    },
+    Token {
+        kind: Colon,
+        span: Span(
+            47,
+            48,
+        ),
+    },
+    Token {
+        kind: Boolean,
+        span: Span(
+            49,
+            54,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            56,
+            57,
+        ),
+    },
+    Token {
+        kind: Colon,
+        span: Span(
+            58,
+            59,
+        ),
+    },
+    Token {
+        kind: Colon,
+        span: Span(
+            59,
+            60,
+        ),
+    },
+    Token {
+        kind: Exclamation,
+        span: Span(
+            61,
+            62,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            62,
+            63,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            64,
+            65,
+        ),
+    },
+    Token {
+        kind: Colon,
+        span: Span(
+            66,
+            67,
+        ),
+    },
+    Token {
+        kind: Colon,
+        span: Span(
+            67,
+            68,
+        ),
+    },
+    Token {
+        kind: Exclamation,
+        span: Span(
+            69,
+            70,
+        ),
+    },
+    Token {
+        kind: Exclamation,
+        span: Span(
+            70,
+            71,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            71,
+            72,
+        ),
+    },
 ]
