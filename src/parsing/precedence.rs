@@ -1,6 +1,6 @@
 use crate::lexing::token::TokenKind::{self, *};
 
-#[derive(Clone, PartialEq, PartialOrd)]
+#[derive(PartialEq, PartialOrd)]
 pub enum Precedence {
     Lowest,
     Equality,   // == or !=

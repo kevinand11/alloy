@@ -5,7 +5,6 @@ use crate::{common::peeker::Peeker, lexing::module::Module};
 pub mod module;
 pub mod token;
 
-#[derive(Clone)]
 pub struct Lexer {
     pub module: Module,
 }

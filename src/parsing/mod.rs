@@ -29,15 +29,15 @@ impl Parser {
     pub fn parse(&mut self) -> Result<Ast, AstError> {
         let mut exprs = vec![];
         while self.tokens.peek().is_some() {
-            exprs.push(self.parse_expression(Precedence::Lowest)?);
+            exprs.push(self.parse_expression(&Precedence::Lowest)?);
         }
         Ok(Ast(exprs))
     }
 
-    fn parse_expression(&mut self, precedence: Precedence) -> Result<Expression, AstError> {
+    fn parse_expression(&mut self, precedence: &Precedence) -> Result<Expression, AstError> {
         let mut expr = self.get_first_expression()?;
 
-        while Precedence::of(self.peek_kind()) > precedence {
+        while &Precedence::of(self.peek_kind()) > precedence {
             expr = match self.peek_kind() {
                 TokenKind::Number => {
                     unreachable!("lexed 2 numbers next to each other")
@@ -67,7 +67,7 @@ impl Parser {
                 TokenKind::Ident => todo!(),
                 TokenKind::Comment => {
                     self.consume()?;
-                    self.parse_expression(precedence.clone())?
+                    self.parse_expression(precedence)?
                 }
 
                 _ => return Err(AstError::syntax(self.consume()?, "illegal token found")),
@@ -84,7 +84,7 @@ impl Parser {
     ) -> Result<Expression, AstError> {
         let token = self.consume()?;
         let precedence = Precedence::of(&token.kind);
-        let rhs = self.parse_expression(precedence)?;
+        let rhs = self.parse_expression(&precedence)?;
         let span = lhs.span.to(&rhs.span);
         Ok(Expression::new(
             ExpressionKind::Infix {
@@ -121,7 +121,7 @@ impl Parser {
         let start = self.expect(TokenKind::LBrace)?;
         let mut exprs = vec![];
         while self.peek_kind() != &TokenKind::RBrace {
-            exprs.push(self.parse_expression(Precedence::Lowest)?);
+            exprs.push(self.parse_expression(&Precedence::Lowest)?);
         }
         let end = self.expect(TokenKind::RBrace)?;
         Ok(Expression::new(
@@ -132,7 +132,7 @@ impl Parser {
 
     fn parse_prefix_expression(&mut self, op: PrefixOp) -> Result<Expression, AstError> {
         let start = self.expect(TokenKind::Exclamation)?;
-        let expr = self.parse_expression(Precedence::Prefix)?;
+        let expr = self.parse_expression(&Precedence::Prefix)?;
         let new_span = start.span.to(&expr.span);
         Ok(Expression::new(
             ExpressionKind::Prefix {
@@ -201,7 +201,7 @@ impl Parser {
         };
 
         self.consume()?;
-        let value = self.parse_expression(Precedence::Lowest)?;
+        let value = self.parse_expression(&Precedence::Lowest)?;
         let span = start.span.to(&value.span);
         Ok(Expression::new(
             ExpressionKind::VariableDecl {

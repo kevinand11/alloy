@@ -1,6 +1,6 @@
 use crate::{common::{peeker::Peeker, span::Span}, lexing::token::Token};
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct Module {
     pub src: String,
 }

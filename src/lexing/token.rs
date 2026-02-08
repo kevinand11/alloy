@@ -6,7 +6,7 @@ pub struct Token {
     pub span: Span,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum TokenKind {
     Plus,
     Minus,
