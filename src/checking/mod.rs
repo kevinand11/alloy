@@ -2,12 +2,12 @@ use crate::{
     checking::{
         errors::CheckedAstError,
         globals::{TYPE_BOOL, TYPE_FLOAT, TYPE_INT},
-        scope::{ScopeManager, ScopedType, ScopedVariable, TypeId},
-        types::{CheckedAst, CheckedExpression},
+        scope::{ScopeManager, ScopedType, ScopedVar, TypeId},
+        types::CheckedAst,
     },
     parsing::{
         ast::Ast,
-        expression::{Expression, ExpressionKind},
+        expression::{Expression, ExpressionKind, InfixOp, PrefixOp},
     },
 };
 
@@ -46,44 +46,57 @@ impl<'a> Checker<'a> {
         &mut self,
         expr: Expression,
         type_hint: Option<&ScopedType>,
-    ) -> Result<CheckedExpression, CheckedAstError> {
-        match &expr.kind {
-            ExpressionKind::LiteralBool(_) => self.expect(
-                expr,
-                TYPE_BOOL.id,
-                type_hint,
-            ),
-            ExpressionKind::LiteralInt(_) => self.expect(
-                expr,
-                TYPE_INT.id,
-                type_hint,
-            ),
-            ExpressionKind::LiteralFloat(_) => self.expect(
-                expr,
-                TYPE_FLOAT.id,
-                type_hint,
-            ),
+    ) -> Result<Expression, CheckedAstError> {
+        match expr.kind.clone() {
+            ExpressionKind::LiteralBool(_) => self.expect(expr, TYPE_BOOL.id, type_hint),
+            ExpressionKind::LiteralInt(_) => self.expect(expr, TYPE_INT.id, type_hint),
+            ExpressionKind::LiteralFloat(_) => self.expect(expr, TYPE_FLOAT.id, type_hint),
             ExpressionKind::Ident(name) => {
-                if let Some(&ScopedVariable {
-                    id: _,
-                    name: _,
-                    type_id: var_type,
-                }) = self.scope_manager.lookup_var(&name, self.scope_manager.cur)
-                {
-                    self.expect(
-                        expr,
-                        var_type,
-                        type_hint,
-                    )
-                } else {
-                    Err(CheckedAstError::variable_not_found(
-                        name.to_owned(),
-                        expr.span,
-                    ))
+                match self.scope_manager.lookup_var(&name, self.scope_manager.cur) {
+                    Some(&ScopedVar {
+                        id: _,
+                        name: _,
+                        type_id,
+                    }) => self.expect(expr, type_id, type_hint),
+                    None => {
+                        return Err(CheckedAstError::variable_not_found(
+                            name.to_owned(),
+                            expr.span,
+                        ));
+                    }
                 }
             }
-            ExpressionKind::Prefix { op: _, rh: _ } => todo!(),
-            ExpressionKind::Infix { op: _, lh: _, rh:  _ } => todo!(),
+            ExpressionKind::Prefix { op, rh } => match op {
+                PrefixOp::Not => {
+                    let rh = self.check_expression(*rh, Some(&TYPE_BOOL))?;
+                    self.expect(rh, TYPE_BOOL.id, type_hint)
+                }
+            },
+            ExpressionKind::Infix { op, lh, rh } => match op {
+                InfixOp::Add | InfixOp::Subtract | InfixOp::Multiply | InfixOp::Divide | InfixOp::Power => {
+                    let lh = self.check_expression(*lh, Some(&TYPE_INT))?;
+                    let rh = self.check_expression(*rh, Some(&TYPE_INT))?;
+                    self.expect(expr.with_kind(ExpressionKind::Infix { op, lh: Box::new(lh), rh: Box::new(rh) }), TYPE_INT.id, type_hint)
+                }
+                InfixOp::LessThan | InfixOp::GreaterThan | InfixOp::LessThanOrEqual | InfixOp::GreaterThanOrEqual => {
+                    let lh = self.check_expression(*lh, Some(&TYPE_INT))?;
+                    let rh = self.check_expression(*rh, Some(&TYPE_INT))?;
+                    self.expect(
+                        expr.with_kind(ExpressionKind::Infix { op, lh: Box::new(lh), rh: Box::new(rh) }),
+                        TYPE_BOOL.id,
+                        type_hint,
+                    )
+                }
+                InfixOp::Equals | InfixOp::NotEquals => {
+                    let lh = self.check_expression(*lh, None)?;
+                    let rh = self.check_expression(*rh, None)?;
+                    if lh.ty != rh.ty {
+                        Err(CheckedAstError::type_mismatch(lh.ty, rh.ty, expr.span))
+                    } else {
+                        self.expect(expr.with_kind(ExpressionKind::Infix { op, lh: Box::new(lh), rh: Box::new(rh) }), TYPE_BOOL.id, type_hint)
+                    }
+                }
+            },
             ExpressionKind::Block(_) => todo!(),
             ExpressionKind::VariableDecl {
                 name: _,
@@ -99,10 +112,10 @@ impl<'a> Checker<'a> {
         expr: Expression,
         res_type: TypeId,
         type_hint: Option<&ScopedType>,
-    ) -> Result<CheckedExpression, CheckedAstError> {
+    ) -> Result<Expression, CheckedAstError> {
         if let Some(type_hint) = type_hint {
             if type_hint.id == res_type {
-                Ok(CheckedExpression::new(expr, res_type))
+                Ok(expr.with_type(res_type))
             } else {
                 Err(CheckedAstError::type_mismatch(
                     type_hint.id,
@@ -111,7 +124,7 @@ impl<'a> Checker<'a> {
                 ))
             }
         } else {
-            Ok(CheckedExpression::new(expr, res_type))
+            Ok(expr.with_type(res_type))
         }
     }
 }

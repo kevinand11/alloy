@@ -1,6 +1,6 @@
 use crate::{
     checking::globals::{TYPE_BOOL, TYPE_FLOAT, TYPE_INT, TYPE_UNIT},
-    parsing::{expression::TypeIdent},
+    parsing::expression::TypeIdent,
 };
 
 pub type ScopeId = usize;
@@ -11,7 +11,7 @@ pub struct Scope<'a> {
     pub id: ScopeId,
     pub parent: Option<ScopeId>,
     pub types: Vec<ScopedType<'a>>,
-    pub vars: Vec<ScopedVariable>,
+    pub vars: Vec<ScopedVar<'a>>,
 }
 
 impl<'a> Scope<'a> {
@@ -39,9 +39,9 @@ pub struct ScopedType<'a> {
     pub id: TypeId,
 }
 
-pub struct ScopedVariable {
-    pub name: String,
-     pub id: VariableId,
+pub struct ScopedVar<'a> {
+    pub name: &'a str,
+    pub id: VariableId,
     pub type_id: TypeId,
 }
 
@@ -66,7 +66,7 @@ impl<'a> ScopeManager<'a> {
         id
     }
 
-    fn lookup_type(&self, ty: &TypeIdent, scope_id: ScopeId) -> Option<&ScopedType> {
+    fn lookup_type(&'a self, ty: &TypeIdent, scope_id: ScopeId) -> Option<&'a ScopedType<'a>> {
         let scope = &self.scopes[scope_id];
         if let Some(ty) = scope.types.iter().find(|t| t.name.eq(&ty.0)) {
             Some(ty)
@@ -77,7 +77,7 @@ impl<'a> ScopeManager<'a> {
         }
     }
 
-    pub fn lookup_var(&self, var_name: &str, scope_id: ScopeId) -> Option<&ScopedVariable> {
+    pub fn lookup_var(&'a self, var_name: &str, scope_id: ScopeId) -> Option<&'a ScopedVar<'a>> {
         let scope = &self.scopes[scope_id];
         if let Some(var) = scope.vars.iter().find(|v| v.name == var_name) {
             Some(var)
@@ -88,17 +88,17 @@ impl<'a> ScopeManager<'a> {
         }
     }
 
-    fn add_var(
-        &mut self,
-        var_name: &str,
-        var_type: TypeId,
-    ) -> VariableId {
+    fn add_var(&mut self, var_name: &'a str, var_type: TypeId) -> VariableId {
         let scope = match self.scopes.get_mut(self.cur) {
             Some(scope) => scope,
             None => panic!("Current scope does not exist"),
         };
         let variable_id = scope.vars.len();
-        let var = ScopedVariable { name: var_name.to_string(), id: variable_id, type_id: var_type };
+        let var = ScopedVar {
+            name: var_name,
+            id: variable_id,
+            type_id: var_type,
+        };
         scope.vars.push(var);
         variable_id
     }
@@ -109,7 +109,10 @@ impl<'a> ScopeManager<'a> {
             None => panic!("Current scope does not exist"),
         };
         let type_id = scope.types.len();
-        let ty = ScopedType { name: ty_name, id: type_id };
+        let ty = ScopedType {
+            name: ty_name,
+            id: type_id,
+        };
         scope.types.push(ty);
         type_id
     }

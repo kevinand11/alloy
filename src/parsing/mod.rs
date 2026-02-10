@@ -146,7 +146,7 @@ impl<'a> Parser<'a> {
 
     fn parse_number(&mut self) -> Result<Expression, AstError> {
         let token = self.expect(TokenKind::Number)?;
-        let span = token.span;
+        let span = token.span.clone();
 
         let raw = self.lexer.module.span_slice(&span);
         let cleaned: String = raw.chars().filter(|c| *c != '_').collect();
@@ -166,7 +166,7 @@ impl<'a> Parser<'a> {
 
     fn parse_boolean(&mut self) -> Result<Expression, AstError> {
         let token = self.expect(TokenKind::Boolean)?;
-        let span = token.span;
+        let span = token.span.clone();
 
         let value = match self.lexer.module.token(&token) {
             "true" => true,

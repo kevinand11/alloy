@@ -2,8 +2,7 @@ use insta::glob;
 use std::fs;
 
 use crate::{
-    lexing::{Lexer, module::Module},
-    parsing::Parser,
+    checking::Checker, lexing::{Lexer, module::Module}, parsing::Parser
 };
 
 #[test]
@@ -14,6 +13,7 @@ fn snapshot_tests() {
         let module = Module::new(input.to_string());
         let lexer = Lexer::new(&module);
         let mut parser = Parser::new(&lexer);
+        let mut checker = Checker::new();
 
         let tokens = lexer.iter().collect::<Vec<_>>();
         insta::assert_debug_snapshot!(tokens);
@@ -23,6 +23,10 @@ fn snapshot_tests() {
             println!("err {:?}", ast)
         }
         assert!(ast.is_ok());
-        insta::assert_debug_snapshot!(ast.unwrap());
+        insta::assert_debug_snapshot!(Parser::new(&lexer).parse().unwrap());
+
+        let checked = checker.check(ast.unwrap());
+        assert!(checked.is_ok());
+        insta::assert_debug_snapshot!(checked.unwrap());
     });
 }
