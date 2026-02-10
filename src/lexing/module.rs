@@ -1,4 +1,6 @@
-use crate::{common::{peeker::Peeker, span::Span}, lexing::token::Token};
+use std::str::Chars;
+
+use crate::{common::span::Span, lexing::token::Token};
 
 #[derive(Debug)]
 pub struct Module {
@@ -12,9 +14,8 @@ impl Module {
         Self { src }
     }
 
-    pub fn get_peeker(&self) -> Peeker<char> {
-        let chars: Vec<char> = self.src.chars().collect();
-        Peeker::new(chars)
+    pub fn iter(&self) -> Chars<'_> {
+        self.src.chars()
     }
 
     pub fn token(&self, token: &Token) -> &str {

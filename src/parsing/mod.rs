@@ -1,7 +1,8 @@
+use std::iter::Peekable;
+
 use crate::{
-    common::peeker::Peeker,
     lexing::{
-        Lexer,
+        Lexer, TokenIter,
         token::{Token, TokenKind},
     },
     parsing::{
@@ -15,14 +16,14 @@ pub mod ast;
 pub mod expression;
 pub mod precedence;
 
-pub struct Parser {
-    lexer: Lexer,
-    tokens: Peeker<Token>,
+pub struct Parser<'a> {
+    pub lexer: &'a Lexer<'a>,
+    tokens: Peekable<TokenIter<'a>>,
 }
 
-impl Parser {
-    pub fn new(lexer: Lexer) -> Self {
-        let tokens = lexer.get_peeker();
+impl<'a> Parser<'a> {
+    pub fn new(lexer: &'a Lexer) -> Self {
+        let tokens = lexer.iter().peekable();
         Self { lexer, tokens }
     }
 
@@ -102,7 +103,7 @@ impl Parser {
                 self.consume()?;
                 self.get_first_expression()
             }
-			TokenKind::Boolean => self.parse_boolean(),
+            TokenKind::Boolean => self.parse_boolean(),
             TokenKind::Number => self.parse_number(),
             TokenKind::Exclamation => self.parse_prefix_expression(PrefixOp::Not),
             TokenKind::LBrace => self.parse_block_expression(),
@@ -163,18 +164,18 @@ impl Parser {
         }
     }
 
-	fn parse_boolean(&mut self) -> Result<Expression, AstError> {
-		let token = self.expect(TokenKind::Boolean)?;
+    fn parse_boolean(&mut self) -> Result<Expression, AstError> {
+        let token = self.expect(TokenKind::Boolean)?;
         let span = token.span;
 
-		let value = match self.lexer.module.token(&token) {
-			"true" => true,
-			"false" => false,
-			_ => return Err(AstError::syntax(token, "invalid bool"))
-		};
+        let value = match self.lexer.module.token(&token) {
+            "true" => true,
+            "false" => false,
+            _ => return Err(AstError::syntax(token, "invalid bool")),
+        };
 
-		Ok(Expression::new(ExpressionKind::LiteralBool(value), span))
-	}
+        Ok(Expression::new(ExpressionKind::LiteralBool(value), span))
+    }
 
     fn parse_type(&mut self) -> Result<VarType, AstError> {
         let token = self.expect(TokenKind::Ident)?;
@@ -229,10 +230,10 @@ impl Parser {
     }
 
     fn consume(&mut self) -> Result<Token, AstError> {
-        Ok(self.tokens.next().ok_or(AstError::eof())?.0)
+        Ok(self.tokens.next().ok_or(AstError::eof())?)
     }
 
     fn peek_kind(&mut self) -> &TokenKind {
-        self.tokens.peek().map_or(&TokenKind::Eof, |(t, _)| &t.kind)
+        self.tokens.peek().map_or(&TokenKind::Eof, |t| &t.kind)
     }
 }
