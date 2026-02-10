@@ -1,12 +1,12 @@
 use crate::common::span::Span;
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct Token {
     pub kind: TokenKind,
     pub span: Span,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum TokenKind {
     Plus,
     Minus,
