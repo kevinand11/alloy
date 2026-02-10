@@ -24,7 +24,7 @@ pub enum ExpressionKind {
         name: String,
         value: Box<Expression>,
         mutable: bool,
-        ty: Option<VarType>,
+        ty: Option<TypeIdent>,
     },
 }
 
@@ -61,4 +61,4 @@ impl Expression {
 }
 
 #[derive(Debug)]
-pub struct VarType(pub String);
+pub struct TypeIdent(pub String);

@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+mod checking;
 mod common;
 mod lexing;
 mod parsing;

@@ -6,7 +6,7 @@ use crate::{
         token::{Token, TokenKind},
     },
     parsing::{
-        expression::{Expression, ExpressionKind, InfixOp, PrefixOp, VarType},
+        expression::{Expression, ExpressionKind, InfixOp, PrefixOp, TypeIdent},
         precedence::Precedence,
     },
 };
@@ -177,9 +177,9 @@ impl<'a> Parser<'a> {
         Ok(Expression::new(ExpressionKind::LiteralBool(value), span))
     }
 
-    fn parse_type(&mut self) -> Result<VarType, AstError> {
+    fn parse_type(&mut self) -> Result<TypeIdent, AstError> {
         let token = self.expect(TokenKind::Ident)?;
-        Ok(VarType(self.lexer.module.token(&token).to_string()))
+        Ok(TypeIdent(self.lexer.module.token(&token).to_string()))
     }
 
     fn parse_variable_declaration(&mut self, start: Token) -> Result<Expression, AstError> {
