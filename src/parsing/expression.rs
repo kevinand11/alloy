@@ -1,4 +1,4 @@
-use crate::{checking::scope::TypeId, common::span::Span};
+use crate::common::span::Span;
 
 #[derive(Clone, Debug)]
 pub enum ExpressionKind {
@@ -52,25 +52,25 @@ pub enum InfixOp {
 pub struct Expression {
     pub kind: ExpressionKind,
     pub span: Span,
-    pub ty: TypeId,
+    pub ty: String,
 }
 
 impl Expression {
-    pub const fn new(kind: ExpressionKind, span: Span) -> Self {
-        Self { kind, span, ty: 0 }
+    pub fn new(kind: ExpressionKind, span: Span) -> Self {
+        Self { kind, span, ty: "Unit".to_string() }
     }
-    pub fn with_type(self, ty: TypeId) -> Self {
+    pub fn with_type(&self, ty: &str) -> Self {
         Self {
-            kind: self.kind,
-            span: self.span,
-            ty,
+            kind: self.kind.clone(),
+            span: self.span.clone(),
+            ty: ty.to_string(),
         }
     }
-    pub fn with_kind(self, kind: ExpressionKind) -> Self {
+    pub fn with_kind(&self, kind: ExpressionKind) -> Self {
         Self {
             kind,
-            span: self.span,
-            ty: self.ty,
+            span: self.span.clone(),
+            ty: self.ty.clone(),
         }
     }
 }

@@ -1,4 +1,4 @@
-use crate::{checking::scope::TypeId, common::span::Span, parsing::expression::TypeIdent};
+use crate::common::span::Span;
 
 #[derive(Debug)]
 pub struct CheckedAstError {
@@ -8,28 +8,28 @@ pub struct CheckedAstError {
 
 #[derive(Debug)]
 pub enum CheckedAstErrorKind {
-    TypeMismatch(TypeId, TypeId),
+    TypeMismatch(String, String),
     VariableNotFound(String),
-    TypeNotFound(TypeIdent),
+    TypeNotFound(String),
 }
 
 impl CheckedAstError {
-    pub fn type_mismatch(expected: TypeId, got: TypeId, span: Span) -> CheckedAstError {
+    pub fn type_mismatch(expected: &str, got: &str, span: Span) -> CheckedAstError {
         CheckedAstError {
             span,
-            kind: CheckedAstErrorKind::TypeMismatch(expected, got),
+            kind: CheckedAstErrorKind::TypeMismatch(expected.to_string(), got.to_string()),
         }
     }
-    pub fn variable_not_found(name: String, span: Span) -> CheckedAstError {
+    pub fn variable_not_found(name: &str, span: Span) -> CheckedAstError {
         CheckedAstError {
             span,
-            kind: CheckedAstErrorKind::VariableNotFound(name),
+            kind: CheckedAstErrorKind::VariableNotFound(name.to_string()),
         }
     }
-    pub fn type_not_found(ty: TypeIdent, span: Span) -> CheckedAstError {
+    pub fn type_not_found(ty: &str, span: Span) -> CheckedAstError {
         CheckedAstError {
             span,
-            kind: CheckedAstErrorKind::TypeNotFound(ty),
+            kind: CheckedAstErrorKind::TypeNotFound(ty.to_string()),
         }
     }
 }
