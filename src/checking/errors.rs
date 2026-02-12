@@ -11,6 +11,8 @@ pub enum CheckedAstErrorKind {
     TypeMismatch(String, String),
     VariableNotFound(String),
     TypeNotFound(String),
+    FunctionNotFound(String),
+    MethodNotFound(String),
 }
 
 impl CheckedAstError {
@@ -30,6 +32,18 @@ impl CheckedAstError {
         CheckedAstError {
             span,
             kind: CheckedAstErrorKind::TypeNotFound(ty.to_string()),
+        }
+    }
+    pub fn function_not_found(name: &str, span: Span) -> CheckedAstError {
+        CheckedAstError {
+            span,
+            kind: CheckedAstErrorKind::FunctionNotFound(name.to_string()),
+        }
+    }
+    pub fn method_not_found(name: &str, span: Span) -> CheckedAstError {
+        CheckedAstError {
+            span,
+            kind: CheckedAstErrorKind::MethodNotFound(name.to_string()),
         }
     }
 }

@@ -203,12 +203,37 @@ impl Checker {
                     type_hint,
                 )
             }
-            ExpressionKind::FunctionCall { name: _, args: _ } => todo!(),
-            ExpressionKind::MethodCall {
-                name: _,
-                args: _,
-                caller: _,
-            } => todo!(),
+            ExpressionKind::FunctionCall { name, args } => {
+                // Hardcoded for now, will implement proper function definitions and lookups later
+                // also verify argument types
+                if name != "to_unit" {
+                    return Err(CheckedAstError::function_not_found(
+                        &name,
+                        expr.span.clone(),
+                    ));
+                }
+                self.expect(
+                    &expr.with_kind(ExpressionKind::FunctionCall { name, args }),
+                    "Unit",
+                    type_hint,
+                )
+            }
+            ExpressionKind::MethodCall { name, args, caller } => {
+                // Hardcoded for now, will implement proper function definitions and lookups later
+                // also verify argument types and caller type
+                if name != "to_unit" {
+                    return Err(CheckedAstError::method_not_found(
+                        &name,
+                        expr.span.clone(),
+                    ));
+                }
+                let caller = self.check_expression(&*caller, None)?;
+                self.expect(
+                    &expr.with_kind(ExpressionKind::MethodCall { name, args, caller: Box::new(caller) }),
+                    "Unit",
+                    type_hint,
+                )
+            }
         }
     }
 

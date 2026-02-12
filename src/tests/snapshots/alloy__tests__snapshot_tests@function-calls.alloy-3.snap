@@ -1,0 +1,30 @@
+---
+source: src/tests/mod.rs
+expression: checked.unwrap()
+input_file: src/tests/cases/function-calls.alloy
+---
+Ast(
+    [
+        Expression {
+            kind: MethodCall {
+                caller: Expression {
+                    kind: LiteralInt(
+                        2,
+                    ),
+                    span: Span(
+                        0,
+                        1,
+                    ),
+                    ty: "Int",
+                },
+                name: "to_unit",
+                args: [],
+            },
+            span: Span(
+                0,
+                11,
+            ),
+            ty: "Unit",
+        },
+    ],
+)

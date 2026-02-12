@@ -1,0 +1,30 @@
+---
+source: src/tests/mod.rs
+expression: "Parser::new(&lexer).parse().unwrap()"
+input_file: src/tests/cases/function-calls.alloy
+---
+Ast(
+    [
+        Expression {
+            kind: MethodCall {
+                caller: Expression {
+                    kind: LiteralInt(
+                        2,
+                    ),
+                    span: Span(
+                        0,
+                        1,
+                    ),
+                    ty: "Unit",
+                },
+                name: "to_unit",
+                args: [],
+            },
+            span: Span(
+                0,
+                11,
+            ),
+            ty: "Unit",
+        },
+    ],
+)

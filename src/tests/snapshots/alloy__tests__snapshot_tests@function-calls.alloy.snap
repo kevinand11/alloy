@@ -1,0 +1,42 @@
+---
+source: src/tests/mod.rs
+expression: tokens
+input_file: src/tests/cases/function-calls.alloy
+---
+[
+    Token {
+        kind: Number,
+        span: Span(
+            0,
+            1,
+        ),
+    },
+    Token {
+        kind: Dot,
+        span: Span(
+            1,
+            2,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            2,
+            9,
+        ),
+    },
+    Token {
+        kind: LParen,
+        span: Span(
+            9,
+            10,
+        ),
+    },
+    Token {
+        kind: RParen,
+        span: Span(
+            10,
+            11,
+        ),
+    },
+]
