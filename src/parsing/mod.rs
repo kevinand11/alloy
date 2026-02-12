@@ -89,7 +89,7 @@ impl<'a> Parser<'a> {
                     }
                 }
 
-                _ => return Err(AstError::syntax(self.consume()?, "illegal token found")),
+                _ => return Err(AstError::syntax(&self.consume()?, "illegal token found")),
             };
         }
 
@@ -132,7 +132,7 @@ impl<'a> Parser<'a> {
                     _ => self.parse_variable_usage(token),
                 }
             }
-            _ => Err(AstError::no_prefix_parse(self.consume()?)),
+            _ => Err(AstError::no_prefix_parse(&self.consume()?)),
         }
     }
 
@@ -164,35 +164,33 @@ impl<'a> Parser<'a> {
 
     fn parse_number(&mut self) -> Result<Expression, AstError> {
         let token = self.expect(TokenKind::Number)?;
-        let span = token.span.clone();
 
-        let raw = self.lexer.module.span_slice(&span);
+        let raw = self.lexer.module.span_slice(&token.span);
         let cleaned: String = raw.chars().filter(|c| *c != '_').collect();
 
         if cleaned.contains('.') {
             let num: f32 = cleaned
                 .parse()
-                .map_err(|_| AstError::syntax(token, "invalid float"))?;
-            Ok(Expression::new(ExpressionKind::LiteralFloat(num), span))
+                .map_err(|_| AstError::syntax(&token, "invalid float"))?;
+            Ok(Expression::new(ExpressionKind::LiteralFloat(num), token.span))
         } else {
             let num: isize = cleaned
                 .parse()
-                .map_err(|_| AstError::syntax(token, "invalid int"))?;
-            Ok(Expression::new(ExpressionKind::LiteralInt(num), span))
+                .map_err(|_| AstError::syntax(&token, "invalid int"))?;
+            Ok(Expression::new(ExpressionKind::LiteralInt(num), token.span))
         }
     }
 
     fn parse_boolean(&mut self) -> Result<Expression, AstError> {
         let token = self.expect(TokenKind::Boolean)?;
-        let span = token.span.clone();
 
         let value = match self.lexer.module.token(&token) {
             "true" => true,
             "false" => false,
-            _ => return Err(AstError::syntax(token, "invalid bool")),
+            _ => return Err(AstError::syntax(&token, "invalid bool")),
         };
 
-        Ok(Expression::new(ExpressionKind::LiteralBool(value), span))
+        Ok(Expression::new(ExpressionKind::LiteralBool(value), token.span))
     }
 
     fn parse_type(&mut self) -> Result<TypeIdent, AstError> {
@@ -213,7 +211,7 @@ impl<'a> Parser<'a> {
             TokenKind::Equals => true,
             _ => {
                 return Err(AstError::expected(
-                    start,
+                    &start,
                     vec![TokenKind::Colon, TokenKind::Equals],
                 ));
             }
@@ -257,7 +255,7 @@ impl<'a> Parser<'a> {
         if token.kind == exp {
             Ok(token)
         } else {
-            Err((&AstError::expected)(token, vec![exp]))
+            Err((&AstError::expected)(&token, vec![exp]))
         }
     }
 

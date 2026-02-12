@@ -14,19 +14,19 @@ pub enum AstError {
 }
 
 impl AstError {
-    pub fn expected(token: Token, exp: Vec<TokenKind>) -> Self {
-        AstError::Expected(token, exp)
+    pub fn expected(token: &Token, exp: Vec<TokenKind>) -> Self {
+        AstError::Expected(token.clone(), exp)
     }
 
-    pub fn syntax(token: Token, s: &str) -> Self {
-        AstError::Syntax(token, format!("syntax error: {s}"))
+    pub fn syntax(token: &Token, s: &str) -> Self {
+        AstError::Syntax(token.clone(), format!("syntax error: {s}"))
     }
 
     pub fn eof() -> Self {
         AstError::UnexpectedEof
     }
 
-    pub fn no_prefix_parse(token: Token) -> Self {
-        AstError::NoPrefixParse(token)
+    pub fn no_prefix_parse(token: &Token) -> Self {
+        AstError::NoPrefixParse(token.clone())
     }
 }

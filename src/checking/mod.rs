@@ -56,7 +56,7 @@ impl Checker {
                     None => {
                         return Err(CheckedAstError::variable_not_found(
                             &name,
-                            expr.span.clone(),
+                            &expr.span,
                         ));
                     }
                 }
@@ -123,7 +123,7 @@ impl Checker {
                         Err(CheckedAstError::type_mismatch(
                             &lh.ty,
                             &rh.ty,
-                            expr.span.clone(),
+                            &expr.span,
                         ))
                     } else {
                         self.expect(
@@ -184,7 +184,7 @@ impl Checker {
                             self.check_expression(&*value, Some(&ty_name))?
                         }
                         None => {
-                            return Err(CheckedAstError::type_not_found(&ty.0, expr.span.clone()));
+                            return Err(CheckedAstError::type_not_found(&ty.0, &expr.span));
                         }
                     }
                 } else {
@@ -209,7 +209,7 @@ impl Checker {
                 if name != "to_unit" {
                     return Err(CheckedAstError::function_not_found(
                         &name,
-                        expr.span.clone(),
+                        &expr.span,
                     ));
                 }
                 self.expect(
@@ -224,7 +224,7 @@ impl Checker {
                 if name != "to_unit" {
                     return Err(CheckedAstError::method_not_found(
                         &name,
-                        expr.span.clone(),
+                        &expr.span,
                     ));
                 }
                 let caller = self.check_expression(&*caller, None)?;
@@ -252,7 +252,7 @@ impl Checker {
         Err(CheckedAstError::type_mismatch(
             last_type_hint.unwrap_or("Unknown"),
             "Unknown",
-            expr.span.clone(),
+            &expr.span,
         ))
     }
 
@@ -273,7 +273,7 @@ impl Checker {
                 Err(CheckedAstError::type_mismatch(
                     type_hint,
                     res_type,
-                    expr.span.clone(),
+                    &expr.span,
                 ))
             }
         } else {
