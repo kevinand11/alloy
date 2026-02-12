@@ -96,11 +96,21 @@ Ast(
             ty: "Unit",
         },
         Expression {
-            kind: Ident(
-                "c",
-            ),
+            kind: Prefix {
+                op: Not,
+                rh: Expression {
+                    kind: Ident(
+                        "c",
+                    ),
+                    span: Span(
+                        30,
+                        31,
+                    ),
+                    ty: "Int",
+                },
+            },
             span: Span(
-                30,
+                29,
                 31,
             ),
             ty: "Bool",
@@ -153,11 +163,21 @@ Ast(
             kind: VariableDecl {
                 name: "f",
                 value: Expression {
-                    kind: Ident(
-                        "d",
-                    ),
+                    kind: Prefix {
+                        op: Not,
+                        rh: Expression {
+                            kind: Ident(
+                                "d",
+                            ),
+                            span: Span(
+                                62,
+                                63,
+                            ),
+                            ty: "Bool",
+                        },
+                    },
                     span: Span(
-                        62,
+                        61,
                         63,
                     ),
                     ty: "Bool",
@@ -175,11 +195,31 @@ Ast(
             kind: VariableDecl {
                 name: "g",
                 value: Expression {
-                    kind: Ident(
-                        "e",
-                    ),
+                    kind: Prefix {
+                        op: Not,
+                        rh: Expression {
+                            kind: Prefix {
+                                op: Not,
+                                rh: Expression {
+                                    kind: Ident(
+                                        "e",
+                                    ),
+                                    span: Span(
+                                        71,
+                                        72,
+                                    ),
+                                    ty: "Bool",
+                                },
+                            },
+                            span: Span(
+                                70,
+                                72,
+                            ),
+                            ty: "Bool",
+                        },
+                    },
                     span: Span(
-                        71,
+                        69,
                         72,
                     ),
                     ty: "Bool",

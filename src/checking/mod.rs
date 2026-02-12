@@ -63,8 +63,8 @@ impl Checker {
             }
             ExpressionKind::Prefix { op, rh } => match op {
                 PrefixOp::Not => {
-                    let rh = self.check_expression(&*rh, None)?;
-                    self.expect(&rh, "Bool", type_hint)
+                    let rh = self.check_expression(&rh, None)?;
+                    self.expect(&expr.with_kind(ExpressionKind::Prefix { op, rh: Box::new(rh) }), "Bool", type_hint)
                 }
             },
             ExpressionKind::Infix { op, lh, rh } => match op {

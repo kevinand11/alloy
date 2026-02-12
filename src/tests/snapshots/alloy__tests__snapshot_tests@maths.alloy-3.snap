@@ -296,11 +296,21 @@ Ast(
             ty: "Bool",
         },
         Expression {
-            kind: LiteralInt(
-                17,
-            ),
+            kind: Prefix {
+                op: Not,
+                rh: Expression {
+                    kind: LiteralInt(
+                        17,
+                    ),
+                    span: Span(
+                        71,
+                        73,
+                    ),
+                    ty: "Int",
+                },
+            },
             span: Span(
-                71,
+                70,
                 73,
             ),
             ty: "Bool",
