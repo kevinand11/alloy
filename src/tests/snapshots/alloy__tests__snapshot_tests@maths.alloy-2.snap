@@ -1,6 +1,6 @@
 ---
 source: src/tests/mod.rs
-expression: ast.unwrap()
+expression: "Parser::new(&lexer).parse().unwrap()"
 input_file: src/tests/cases/maths.alloy
 ---
 Ast(
@@ -19,6 +19,7 @@ Ast(
                                 0,
                                 1,
                             ),
+                            ty: "Unit",
                         },
                         rh: Expression {
                             kind: LiteralInt(
@@ -28,12 +29,14 @@ Ast(
                                 4,
                                 5,
                             ),
+                            ty: "Unit",
                         },
                     },
                     span: Span(
                         0,
                         5,
                     ),
+                    ty: "Unit",
                 },
                 rh: Expression {
                     kind: LiteralInt(
@@ -43,12 +46,14 @@ Ast(
                         8,
                         9,
                     ),
+                    ty: "Unit",
                 },
             },
             span: Span(
                 0,
                 9,
             ),
+            ty: "Unit",
         },
         Expression {
             kind: Infix {
@@ -61,6 +66,7 @@ Ast(
                         11,
                         12,
                     ),
+                    ty: "Unit",
                 },
                 rh: Expression {
                     kind: LiteralInt(
@@ -70,12 +76,14 @@ Ast(
                         14,
                         15,
                     ),
+                    ty: "Unit",
                 },
             },
             span: Span(
                 11,
                 15,
             ),
+            ty: "Unit",
         },
         Expression {
             kind: Infix {
@@ -88,6 +96,7 @@ Ast(
                         17,
                         18,
                     ),
+                    ty: "Unit",
                 },
                 rh: Expression {
                     kind: LiteralInt(
@@ -97,12 +106,14 @@ Ast(
                         19,
                         20,
                     ),
+                    ty: "Unit",
                 },
             },
             span: Span(
                 17,
                 20,
             ),
+            ty: "Unit",
         },
         Expression {
             kind: Infix {
@@ -115,6 +126,7 @@ Ast(
                         22,
                         23,
                     ),
+                    ty: "Unit",
                 },
                 rh: Expression {
                     kind: LiteralInt(
@@ -124,12 +136,14 @@ Ast(
                         26,
                         27,
                     ),
+                    ty: "Unit",
                 },
             },
             span: Span(
                 22,
                 27,
             ),
+            ty: "Unit",
         },
         Expression {
             kind: Infix {
@@ -142,6 +156,7 @@ Ast(
                         28,
                         29,
                     ),
+                    ty: "Unit",
                 },
                 rh: Expression {
                     kind: LiteralInt(
@@ -151,12 +166,14 @@ Ast(
                         32,
                         33,
                     ),
+                    ty: "Unit",
                 },
             },
             span: Span(
                 28,
                 33,
             ),
+            ty: "Unit",
         },
         Expression {
             kind: Infix {
@@ -169,6 +186,7 @@ Ast(
                         34,
                         35,
                     ),
+                    ty: "Unit",
                 },
                 rh: Expression {
                     kind: LiteralInt(
@@ -178,12 +196,14 @@ Ast(
                         39,
                         41,
                     ),
+                    ty: "Unit",
                 },
             },
             span: Span(
                 34,
                 41,
             ),
+            ty: "Unit",
         },
         Expression {
             kind: Infix {
@@ -196,6 +216,7 @@ Ast(
                         42,
                         44,
                     ),
+                    ty: "Unit",
                 },
                 rh: Expression {
                     kind: LiteralInt(
@@ -205,12 +226,14 @@ Ast(
                         48,
                         50,
                     ),
+                    ty: "Unit",
                 },
             },
             span: Span(
                 42,
                 50,
             ),
+            ty: "Unit",
         },
         Expression {
             kind: Infix {
@@ -223,6 +246,7 @@ Ast(
                         51,
                         53,
                     ),
+                    ty: "Unit",
                 },
                 rh: Expression {
                     kind: LiteralInt(
@@ -232,12 +256,14 @@ Ast(
                         57,
                         59,
                     ),
+                    ty: "Unit",
                 },
             },
             span: Span(
                 51,
                 59,
             ),
+            ty: "Unit",
         },
         Expression {
             kind: Infix {
@@ -250,6 +276,7 @@ Ast(
                         60,
                         62,
                     ),
+                    ty: "Unit",
                 },
                 rh: Expression {
                     kind: LiteralInt(
@@ -259,12 +286,14 @@ Ast(
                         66,
                         68,
                     ),
+                    ty: "Unit",
                 },
             },
             span: Span(
                 60,
                 68,
             ),
+            ty: "Unit",
         },
         Expression {
             kind: Prefix {
@@ -277,12 +306,14 @@ Ast(
                         71,
                         73,
                     ),
+                    ty: "Unit",
                 },
             },
             span: Span(
                 70,
                 73,
             ),
+            ty: "Unit",
         },
     ],
 )

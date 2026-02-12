@@ -1,6 +1,6 @@
 ---
 source: src/tests/mod.rs
-expression: "Parser::new(&lexer).parse().unwrap()"
+expression: checked.unwrap()
 input_file: src/tests/cases/block-exprs.alloy
 ---
 Ast(
@@ -19,7 +19,7 @@ Ast(
                                 0,
                                 2,
                             ),
-                            ty: "Unit",
+                            ty: "Int",
                         },
                         rh: Expression {
                             kind: Block(
@@ -35,7 +35,7 @@ Ast(
                                                     6,
                                                     7,
                                                 ),
-                                                ty: "Unit",
+                                                ty: "Int",
                                             },
                                             rh: Expression {
                                                 kind: LiteralInt(
@@ -45,14 +45,14 @@ Ast(
                                                     10,
                                                     11,
                                                 ),
-                                                ty: "Unit",
+                                                ty: "Int",
                                             },
                                         },
                                         span: Span(
                                             6,
                                             11,
                                         ),
-                                        ty: "Unit",
+                                        ty: "Int",
                                     },
                                 ],
                             ),
@@ -60,14 +60,14 @@ Ast(
                                 4,
                                 13,
                             ),
-                            ty: "Unit",
+                            ty: "Int",
                         },
                     },
                     span: Span(
                         0,
                         13,
                     ),
-                    ty: "Unit",
+                    ty: "Int",
                 },
                 rh: Expression {
                     kind: Infix {
@@ -83,7 +83,7 @@ Ast(
                                             17,
                                             18,
                                         ),
-                                        ty: "Unit",
+                                        ty: "Int",
                                     },
                                 ],
                             ),
@@ -91,7 +91,7 @@ Ast(
                                 16,
                                 19,
                             ),
-                            ty: "Unit",
+                            ty: "Int",
                         },
                         rh: Expression {
                             kind: LiteralInt(
@@ -101,21 +101,21 @@ Ast(
                                 22,
                                 23,
                             ),
-                            ty: "Unit",
+                            ty: "Int",
                         },
                     },
                     span: Span(
                         16,
                         23,
                     ),
-                    ty: "Unit",
+                    ty: "Int",
                 },
             },
             span: Span(
                 0,
                 23,
             ),
-            ty: "Unit",
+            ty: "Int",
         },
     ],
 )
