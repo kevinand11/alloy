@@ -26,5 +26,69 @@ Ast(
             ),
             ty: "Unit",
         },
+        Expression {
+            kind: VariableDecl {
+                name: "a",
+                value: Expression {
+                    kind: LiteralBool(
+                        true,
+                    ),
+                    span: Span(
+                        16,
+                        20,
+                    ),
+                    ty: "Bool",
+                },
+                mutable: true,
+                ty: None,
+            },
+            span: Span(
+                13,
+                20,
+            ),
+            ty: "Unit",
+        },
+        Expression {
+            kind: MethodCall {
+                caller: Expression {
+                    kind: LiteralInt(
+                        3,
+                    ),
+                    span: Span(
+                        21,
+                        22,
+                    ),
+                    ty: "Int",
+                },
+                name: "to_unit",
+                args: [
+                    Expression {
+                        kind: Ident(
+                            "a",
+                        ),
+                        span: Span(
+                            31,
+                            32,
+                        ),
+                        ty: "Bool",
+                    },
+                    Expression {
+                        kind: LiteralInt(
+                            4,
+                        ),
+                        span: Span(
+                            33,
+                            34,
+                        ),
+                        ty: "Int",
+                    },
+                ],
+            },
+            span: Span(
+                21,
+                35,
+            ),
+            ty: "Unit",
+        },
     ],
 )

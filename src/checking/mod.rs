@@ -205,13 +205,17 @@ impl Checker {
             }
             ExpressionKind::FunctionCall { name, args } => {
                 // Hardcoded for now, will implement proper function definitions and lookups later
-                // also verify argument types
+                // also verify argument types and length matches fn type and length
                 if name != "to_unit" {
                     return Err(CheckedAstError::function_not_found(
                         &name,
                         &expr.span,
                     ));
                 }
+                let args = args
+                    .into_iter()
+                    .map(|arg| self.check_expression(&arg, None))
+                    .collect::<Result<Vec<_>, _>>()?;
                 self.expect(
                     &expr.with_kind(ExpressionKind::FunctionCall { name, args }),
                     "Unit",
@@ -220,7 +224,7 @@ impl Checker {
             }
             ExpressionKind::MethodCall { name, args, caller } => {
                 // Hardcoded for now, will implement proper function definitions and lookups later
-                // also verify argument types and caller type
+                // also verify argument types and length matches method type and length and caller type
                 if name != "to_unit" {
                     return Err(CheckedAstError::method_not_found(
                         &name,
@@ -228,6 +232,10 @@ impl Checker {
                     ));
                 }
                 let caller = self.check_expression(&*caller, None)?;
+                let args = args
+                    .into_iter()
+                    .map(|arg| self.check_expression(&arg, None))
+                    .collect::<Result<Vec<_>, _>>()?;
                 self.expect(
                     &expr.with_kind(ExpressionKind::MethodCall { name, args, caller: Box::new(caller) }),
                     "Unit",

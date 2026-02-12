@@ -239,12 +239,24 @@ impl<'a> Parser<'a> {
     fn parse_function_call(&mut self, start: &Span) -> Result<Expression, AstError> {
         let ident = self.expect(TokenKind::Ident)?;
         self.expect(TokenKind::LParen)?;
+        let mut args = vec![];
+        loop {
+            match self.peek_kind() {
+                TokenKind::RParen => break,
+                _ => {
+                    args.push(self.parse_expression(&Precedence::Lowest)?);
+                    if self.peek_kind() == &TokenKind::Comma {
+                        self.consume()?;
+                    }
+                },
+            }
+        };
         let end = self.expect(TokenKind::RParen)?;
         let span = start.to(&end.span);
         Ok(Expression::new(
             ExpressionKind::FunctionCall {
                 name: self.lexer.module.token(&ident).to_string(),
-                args: vec![],
+                args,
             },
             span,
         ))
