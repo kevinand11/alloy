@@ -68,59 +68,80 @@ input_file: src/tests/cases/function-calls.alloy
         ),
     },
     Token {
-        kind: Number,
+        kind: Ident,
         span: Span(
             21,
             22,
         ),
     },
     Token {
-        kind: Dot,
+        kind: Equals,
         span: Span(
             22,
             23,
         ),
     },
     Token {
-        kind: Ident,
+        kind: Boolean,
         span: Span(
             23,
-            30,
-        ),
-    },
-    Token {
-        kind: LParen,
-        span: Span(
-            30,
-            31,
-        ),
-    },
-    Token {
-        kind: Ident,
-        span: Span(
-            31,
-            32,
-        ),
-    },
-    Token {
-        kind: Comma,
-        span: Span(
-            32,
-            33,
+            28,
         ),
     },
     Token {
         kind: Number,
         span: Span(
-            33,
-            34,
+            29,
+            30,
+        ),
+    },
+    Token {
+        kind: Dot,
+        span: Span(
+            30,
+            31,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            31,
+            38,
+        ),
+    },
+    Token {
+        kind: LParen,
+        span: Span(
+            38,
+            39,
+        ),
+    },
+    Token {
+        kind: Ident,
+        span: Span(
+            39,
+            40,
+        ),
+    },
+    Token {
+        kind: Comma,
+        span: Span(
+            40,
+            41,
+        ),
+    },
+    Token {
+        kind: Number,
+        span: Span(
+            41,
+            42,
         ),
     },
     Token {
         kind: RParen,
         span: Span(
-            34,
-            35,
+            42,
+            43,
         ),
     },
 ]

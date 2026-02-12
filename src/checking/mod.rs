@@ -54,10 +54,7 @@ impl Checker {
                         self.expect(expr, &type_name, type_hint)
                     }
                     None => {
-                        return Err(CheckedAstError::variable_not_found(
-                            &name,
-                            &expr.span,
-                        ));
+                        return Err(CheckedAstError::variable_not_found(&name, &expr.span));
                     }
                 }
             }
@@ -120,11 +117,7 @@ impl Checker {
                     let lh = self.check_expression(&*lh, None)?;
                     let rh = self.check_expression(&*rh, None)?;
                     if lh.ty != rh.ty {
-                        Err(CheckedAstError::type_mismatch(
-                            &lh.ty,
-                            &rh.ty,
-                            &expr.span,
-                        ))
+                        Err(CheckedAstError::type_mismatch(&lh.ty, &rh.ty, &expr.span))
                     } else {
                         self.expect(
                             &expr.with_kind(ExpressionKind::Infix {
@@ -203,14 +196,32 @@ impl Checker {
                     type_hint,
                 )
             }
+            ExpressionKind::VariableAssignment { name, value } => {
+                let value = match self.scope_manager.lookup_var(&name, self.scope_manager.cur) {
+                    Some(var) => {
+                        let type_name = var.type_name.clone();
+                        self.check_expression(&*value, Some(&type_name))?
+                    }
+                    None => {
+                        return Err(CheckedAstError::variable_not_found(&name, &expr.span));
+                    }
+                };
+
+                self.scope_manager.add_var(name.as_str(), &value.ty);
+                self.expect(
+                    &expr.with_kind(ExpressionKind::VariableAssignment {
+                        name,
+                        value: Box::new(value),
+                    }),
+                    "Unit",
+                    type_hint,
+                )
+            }
             ExpressionKind::FunctionCall { name, args } => {
                 // Hardcoded for now, will implement proper function definitions and lookups later
                 // also verify argument types and length matches fn type and length
                 if name != "to_unit" {
-                    return Err(CheckedAstError::function_not_found(
-                        &name,
-                        &expr.span,
-                    ));
+                    return Err(CheckedAstError::function_not_found(&name, &expr.span));
                 }
                 let args = args
                     .into_iter()
@@ -226,10 +237,7 @@ impl Checker {
                 // Hardcoded for now, will implement proper function definitions and lookups later
                 // also verify argument types and length matches method type and length and caller type
                 if name != "to_unit" {
-                    return Err(CheckedAstError::method_not_found(
-                        &name,
-                        &expr.span,
-                    ));
+                    return Err(CheckedAstError::method_not_found(&name, &expr.span));
                 }
                 let caller = self.check_expression(&*caller, None)?;
                 let args = args
@@ -237,7 +245,11 @@ impl Checker {
                     .map(|arg| self.check_expression(&arg, None))
                     .collect::<Result<Vec<_>, _>>()?;
                 self.expect(
-                    &expr.with_kind(ExpressionKind::MethodCall { name, args, caller: Box::new(caller) }),
+                    &expr.with_kind(ExpressionKind::MethodCall {
+                        name,
+                        args,
+                        caller: Box::new(caller),
+                    }),
                     "Unit",
                     type_hint,
                 )
@@ -279,9 +291,7 @@ impl Checker {
                 Ok(expr.with_type(res_type))
             } else {
                 Err(CheckedAstError::type_mismatch(
-                    type_hint,
-                    res_type,
-                    &expr.span,
+                    type_hint, res_type, &expr.span,
                 ))
             }
         } else {

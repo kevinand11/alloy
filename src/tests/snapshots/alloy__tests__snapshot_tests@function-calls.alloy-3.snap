@@ -49,14 +49,34 @@ Ast(
             ty: "Unit",
         },
         Expression {
+            kind: VariableAssignment {
+                name: "a",
+                value: Expression {
+                    kind: LiteralBool(
+                        false,
+                    ),
+                    span: Span(
+                        23,
+                        28,
+                    ),
+                    ty: "Bool",
+                },
+            },
+            span: Span(
+                21,
+                28,
+            ),
+            ty: "Unit",
+        },
+        Expression {
             kind: MethodCall {
                 caller: Expression {
                     kind: LiteralInt(
                         3,
                     ),
                     span: Span(
-                        21,
-                        22,
+                        29,
+                        30,
                     ),
                     ty: "Int",
                 },
@@ -67,8 +87,8 @@ Ast(
                             "a",
                         ),
                         span: Span(
-                            31,
-                            32,
+                            39,
+                            40,
                         ),
                         ty: "Bool",
                     },
@@ -77,16 +97,16 @@ Ast(
                             4,
                         ),
                         span: Span(
-                            33,
-                            34,
+                            41,
+                            42,
                         ),
                         ty: "Int",
                     },
                 ],
             },
             span: Span(
-                21,
-                35,
+                29,
+                43,
             ),
             ty: "Unit",
         },

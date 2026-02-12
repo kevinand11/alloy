@@ -41,10 +41,6 @@ impl<'a> Parser<'a> {
 
         while &Precedence::of(self.peek_kind()) > precedence {
             expr = match self.peek_kind() {
-                TokenKind::Number => {
-                    unreachable!("lexed 2 numbers next to each other")
-                }
-
                 TokenKind::Plus => self.parse_infix_expression(expr, InfixOp::Add)?,
                 TokenKind::Minus => self.parse_infix_expression(expr, InfixOp::Subtract)?,
                 TokenKind::Asterisk => self.parse_infix_expression(expr, InfixOp::Multiply)?,
@@ -63,10 +59,6 @@ impl<'a> Parser<'a> {
                 TokenKind::DoubleEquals => self.parse_infix_expression(expr, InfixOp::Equals)?,
                 TokenKind::NotEquals => self.parse_infix_expression(expr, InfixOp::NotEquals)?,
 
-                TokenKind::LBrace => todo!(),
-                TokenKind::RBrace => todo!(),
-
-                TokenKind::Ident => todo!(),
                 TokenKind::Comment => {
                     self.consume()?;
                     self.parse_expression(precedence)?
@@ -129,6 +121,7 @@ impl<'a> Parser<'a> {
                 let token = self.consume()?;
                 match self.peek_kind() {
                     TokenKind::Colon => self.parse_variable_declaration(token),
+                    TokenKind::Equals => self.parse_variable_assignment(token),
                     _ => self.parse_variable_usage(token),
                 }
             }
@@ -226,6 +219,20 @@ impl<'a> Parser<'a> {
                 value: Box::new(value),
                 mutable,
                 ty,
+            },
+            span,
+        ))
+    }
+
+    fn parse_variable_assignment(&mut self, start: Token) -> Result<Expression, AstError> {
+        let name = self.lexer.module.token(&start).to_string();
+        self.consume()?;
+        let value = self.parse_expression(&Precedence::Lowest)?;
+        let span = start.span.to(&value.span);
+        Ok(Expression::new(
+            ExpressionKind::VariableAssignment {
+                name,
+                value: Box::new(value),
             },
             span,
         ))

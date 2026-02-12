@@ -27,6 +27,11 @@ pub enum ExpressionKind {
         ty: Option<TypeIdent>,
     },
 
+    VariableAssignment {
+        name: String,
+        value: Box<Expression>,
+    },
+
     FunctionCall {
         name: String,
         args: Vec<Expression>,
