@@ -1,6 +1,7 @@
 use std::iter::Peekable;
 
 use crate::{
+    common::span::Span,
     lexing::{
         Lexer, TokenIter,
         token::{Token, TokenKind},
@@ -69,6 +70,23 @@ impl<'a> Parser<'a> {
                 TokenKind::Comment => {
                     self.consume()?;
                     self.parse_expression(precedence)?
+                }
+
+                TokenKind::Dot => {
+                    self.consume()?;
+                    let fn_call = self.parse_function_call(&expr.span)?;
+                    let total_span = expr.span.to(&fn_call.span);
+                    match fn_call.kind {
+                        ExpressionKind::FunctionCall { name, args } => Expression::new(
+                            ExpressionKind::MethodCall {
+                                caller: Box::new(expr),
+                                name,
+                                args,
+                            },
+                            total_span,
+                        ),
+                        _ => unreachable!(),
+                    }
                 }
 
                 _ => return Err(AstError::syntax(self.consume()?, "illegal token found")),
@@ -218,6 +236,20 @@ impl<'a> Parser<'a> {
     fn parse_variable_usage(&mut self, start: Token) -> Result<Expression, AstError> {
         let name = (*self).lexer.module.token(&start).to_string();
         Ok(Expression::new(ExpressionKind::Ident(name), start.span))
+    }
+
+    fn parse_function_call(&mut self, start: &Span) -> Result<Expression, AstError> {
+        let ident = self.expect(TokenKind::Ident)?;
+        self.expect(TokenKind::LParen)?;
+        let end = self.expect(TokenKind::RParen)?;
+        let span = start.to(&end.span);
+        Ok(Expression::new(
+            ExpressionKind::FunctionCall {
+                name: self.lexer.module.token(&ident).to_string(),
+                args: vec![],
+            },
+            span,
+        ))
     }
 
     fn expect(&mut self, exp: TokenKind) -> Result<Token, AstError> {

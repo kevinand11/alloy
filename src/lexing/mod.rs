@@ -102,7 +102,10 @@ impl<'a> Lexer<'a> {
 
             '{' => Token::new(LBrace, cur_idx, 1),
             '}' => Token::new(RBrace, cur_idx, 1),
+            '(' => Token::new(LParen, cur_idx, 1),
+            ')' => Token::new(RParen, cur_idx, 1),
             ':' => Token::new(Colon, cur_idx, 1),
+            ',' => Token::new(Comma, cur_idx, 1),
 
             'a'..='z' | 'A'..='Z' | '_' => {
                 let mut last = cur_idx;
@@ -130,13 +133,13 @@ impl<'a> Lexer<'a> {
 
             '.' => {
                 char_peeker.next();
+                call_next = false;
                 if char_peeker.peek().is_some_and(|(_, c)| c.is_ascii_digit()) {
                     let last = self.read_number(char_peeker, cur_idx);
                     let chars = &self.module.slice(cur_idx, last + 1);
-                    call_next = false;
                     Token::new(Number, cur_idx, chars.len())
                 } else {
-                    Token::new(Illegal, cur_idx, 1)
+                    Token::new(Dot, cur_idx, 1)
                 }
             }
 
@@ -165,9 +168,15 @@ impl<'a> Lexer<'a> {
                     last = l;
                 }
                 '.' if !seen_dot => {
-                    let (l, _) = char_peeker.next().unwrap();
-                    last = l;
-                    seen_dot = true;
+                    let mut lookahead = char_peeker.clone();
+                    lookahead.next();
+                    if lookahead.peek().is_some_and(|(_, n)| n.is_ascii_digit()) {
+                        let (l, _) = char_peeker.next().unwrap();
+                        last = l;
+                        seen_dot = true;
+                    } else {
+                        break;
+                    }
                 }
                 _ => break,
             }

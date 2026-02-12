@@ -64,7 +64,14 @@ impl Checker {
             ExpressionKind::Prefix { op, rh } => match op {
                 PrefixOp::Not => {
                     let rh = self.check_expression(&rh, None)?;
-                    self.expect(&expr.with_kind(ExpressionKind::Prefix { op, rh: Box::new(rh) }), "Bool", type_hint)
+                    self.expect(
+                        &expr.with_kind(ExpressionKind::Prefix {
+                            op,
+                            rh: Box::new(rh),
+                        }),
+                        "Bool",
+                        type_hint,
+                    )
                 }
             },
             ExpressionKind::Infix { op, lh, rh } => match op {
@@ -73,8 +80,10 @@ impl Checker {
                 | InfixOp::Multiply
                 | InfixOp::Divide
                 | InfixOp::Power => {
-                    let (lh, lh_type) = self.check_expression_with_type_hints(&lh, vec!["Int", "Float"])?;
-                    let (rh, rh_type) = self.check_expression_with_type_hints(&rh, vec!["Int", "Float"])?;
+                    let (lh, lh_type) =
+                        self.check_expression_with_type_hints(&lh, vec!["Int", "Float"])?;
+                    let (rh, rh_type) =
+                        self.check_expression_with_type_hints(&rh, vec!["Int", "Float"])?;
                     let res_type = match op {
                         InfixOp::Divide => "Float",
                         _ => Checker::choose_btw_types(lh_type, rh_type, "Float"),
@@ -93,8 +102,10 @@ impl Checker {
                 | InfixOp::GreaterThan
                 | InfixOp::LessThanOrEqual
                 | InfixOp::GreaterThanOrEqual => {
-                    let (lh, _) = self.check_expression_with_type_hints(&*lh, vec!["Int", "Float"])?;
-                    let (rh, _) = self.check_expression_with_type_hints(&*rh, vec!["Int", "Float"])?;
+                    let (lh, _) =
+                        self.check_expression_with_type_hints(&*lh, vec!["Int", "Float"])?;
+                    let (rh, _) =
+                        self.check_expression_with_type_hints(&*rh, vec!["Int", "Float"])?;
                     self.expect(
                         &expr.with_kind(ExpressionKind::Infix {
                             op,
@@ -171,7 +182,7 @@ impl Checker {
                         Some(ty) => {
                             let ty_name = ty.name.clone();
                             self.check_expression(&*value, Some(&ty_name))?
-                        },
+                        }
                         None => {
                             return Err(CheckedAstError::type_not_found(&ty.0, expr.span.clone()));
                         }
@@ -192,6 +203,12 @@ impl Checker {
                     type_hint,
                 )
             }
+            ExpressionKind::FunctionCall { name: _, args: _ } => todo!(),
+            ExpressionKind::MethodCall {
+                name: _,
+                args: _,
+                caller: _,
+            } => todo!(),
         }
     }
 
@@ -215,11 +232,7 @@ impl Checker {
     }
 
     fn choose_btw_types<'a>(type1: &'a str, type2: &'a str, or_else: &'a str) -> &'a str {
-        if type1 == type2 {
-            type1
-        } else {
-            or_else
-        }
+        if type1 == type2 { type1 } else { or_else }
     }
 
     fn expect(

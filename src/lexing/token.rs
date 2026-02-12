@@ -26,6 +26,10 @@ pub enum TokenKind {
     Exclamation,
     Colon,
     Equals,
+    Dot,
+    LParen,
+    RParen,
+    Comma,
 
     Number,
     Boolean,

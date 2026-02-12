@@ -10,6 +10,7 @@ pub enum Precedence {
     Order,      // ^
     Group,      // { }
     Prefix,     // !X or -X
+    Dot,
 }
 
 impl Precedence {
@@ -21,6 +22,7 @@ impl Precedence {
             Asterisk | Slash => Precedence::Product,
             Caret => Precedence::Order,
             LBrace => Precedence::Group,
+            Dot => Precedence::Dot,
             _ => Precedence::Lowest,
         }
     }

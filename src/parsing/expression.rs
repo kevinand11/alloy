@@ -26,6 +26,17 @@ pub enum ExpressionKind {
         mutable: bool,
         ty: Option<TypeIdent>,
     },
+
+    FunctionCall {
+        name: String,
+        args: Vec<Expression>,
+    },
+
+    MethodCall {
+        caller: Box<Expression>,
+        name: String,
+        args: Vec<Expression>,
+    },
 }
 
 #[derive(Clone, Debug)]
@@ -57,7 +68,11 @@ pub struct Expression {
 
 impl Expression {
     pub fn new(kind: ExpressionKind, span: Span) -> Self {
-        Self { kind, span, ty: "Unit".to_string() }
+        Self {
+            kind,
+            span,
+            ty: "Unit".to_string(),
+        }
     }
     pub fn with_type(&self, ty: &str) -> Self {
         Self {
