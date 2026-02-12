@@ -1,6 +1,6 @@
 ---
 source: src/tests/mod.rs
-expression: "Parser::new(&lexer).parse().unwrap()"
+expression: checked.unwrap()
 input_file: src/tests/cases/numbers.alloy
 ---
 Ast(
@@ -19,7 +19,7 @@ Ast(
                                 0,
                                 3,
                             ),
-                            ty: "Unit",
+                            ty: "Float",
                         },
                         rh: Expression {
                             kind: LiteralInt(
@@ -29,14 +29,14 @@ Ast(
                                 6,
                                 13,
                             ),
-                            ty: "Unit",
+                            ty: "Int",
                         },
                     },
                     span: Span(
                         0,
                         13,
                     ),
-                    ty: "Unit",
+                    ty: "Float",
                 },
                 rh: Expression {
                     kind: LiteralFloat(
@@ -46,14 +46,14 @@ Ast(
                         16,
                         20,
                     ),
-                    ty: "Unit",
+                    ty: "Float",
                 },
             },
             span: Span(
                 0,
                 20,
             ),
-            ty: "Unit",
+            ty: "Float",
         },
     ],
 )

@@ -1,0 +1,309 @@
+---
+source: src/tests/mod.rs
+expression: checked.unwrap()
+input_file: src/tests/cases/maths.alloy
+---
+Ast(
+    [
+        Expression {
+            kind: Infix {
+                op: Add,
+                lh: Expression {
+                    kind: Infix {
+                        op: Subtract,
+                        lh: Expression {
+                            kind: LiteralInt(
+                                0,
+                            ),
+                            span: Span(
+                                0,
+                                1,
+                            ),
+                            ty: "Int",
+                        },
+                        rh: Expression {
+                            kind: LiteralInt(
+                                1,
+                            ),
+                            span: Span(
+                                4,
+                                5,
+                            ),
+                            ty: "Int",
+                        },
+                    },
+                    span: Span(
+                        0,
+                        5,
+                    ),
+                    ty: "Int",
+                },
+                rh: Expression {
+                    kind: LiteralInt(
+                        2,
+                    ),
+                    span: Span(
+                        8,
+                        9,
+                    ),
+                    ty: "Int",
+                },
+            },
+            span: Span(
+                0,
+                9,
+            ),
+            ty: "Int",
+        },
+        Expression {
+            kind: Infix {
+                op: Divide,
+                lh: Expression {
+                    kind: LiteralInt(
+                        3,
+                    ),
+                    span: Span(
+                        11,
+                        12,
+                    ),
+                    ty: "Int",
+                },
+                rh: Expression {
+                    kind: LiteralInt(
+                        4,
+                    ),
+                    span: Span(
+                        14,
+                        15,
+                    ),
+                    ty: "Int",
+                },
+            },
+            span: Span(
+                11,
+                15,
+            ),
+            ty: "Float",
+        },
+        Expression {
+            kind: Infix {
+                op: Power,
+                lh: Expression {
+                    kind: LiteralInt(
+                        4,
+                    ),
+                    span: Span(
+                        17,
+                        18,
+                    ),
+                    ty: "Int",
+                },
+                rh: Expression {
+                    kind: LiteralInt(
+                        3,
+                    ),
+                    span: Span(
+                        19,
+                        20,
+                    ),
+                    ty: "Int",
+                },
+            },
+            span: Span(
+                17,
+                20,
+            ),
+            ty: "Int",
+        },
+        Expression {
+            kind: Infix {
+                op: LessThan,
+                lh: Expression {
+                    kind: LiteralInt(
+                        5,
+                    ),
+                    span: Span(
+                        22,
+                        23,
+                    ),
+                    ty: "Int",
+                },
+                rh: Expression {
+                    kind: LiteralInt(
+                        6,
+                    ),
+                    span: Span(
+                        26,
+                        27,
+                    ),
+                    ty: "Int",
+                },
+            },
+            span: Span(
+                22,
+                27,
+            ),
+            ty: "Bool",
+        },
+        Expression {
+            kind: Infix {
+                op: GreaterThan,
+                lh: Expression {
+                    kind: LiteralInt(
+                        7,
+                    ),
+                    span: Span(
+                        28,
+                        29,
+                    ),
+                    ty: "Int",
+                },
+                rh: Expression {
+                    kind: LiteralInt(
+                        8,
+                    ),
+                    span: Span(
+                        32,
+                        33,
+                    ),
+                    ty: "Int",
+                },
+            },
+            span: Span(
+                28,
+                33,
+            ),
+            ty: "Bool",
+        },
+        Expression {
+            kind: Infix {
+                op: LessThanOrEqual,
+                lh: Expression {
+                    kind: LiteralInt(
+                        9,
+                    ),
+                    span: Span(
+                        34,
+                        35,
+                    ),
+                    ty: "Int",
+                },
+                rh: Expression {
+                    kind: LiteralInt(
+                        10,
+                    ),
+                    span: Span(
+                        39,
+                        41,
+                    ),
+                    ty: "Int",
+                },
+            },
+            span: Span(
+                34,
+                41,
+            ),
+            ty: "Bool",
+        },
+        Expression {
+            kind: Infix {
+                op: GreaterThanOrEqual,
+                lh: Expression {
+                    kind: LiteralInt(
+                        11,
+                    ),
+                    span: Span(
+                        42,
+                        44,
+                    ),
+                    ty: "Int",
+                },
+                rh: Expression {
+                    kind: LiteralInt(
+                        12,
+                    ),
+                    span: Span(
+                        48,
+                        50,
+                    ),
+                    ty: "Int",
+                },
+            },
+            span: Span(
+                42,
+                50,
+            ),
+            ty: "Bool",
+        },
+        Expression {
+            kind: Infix {
+                op: Equals,
+                lh: Expression {
+                    kind: LiteralInt(
+                        13,
+                    ),
+                    span: Span(
+                        51,
+                        53,
+                    ),
+                    ty: "Int",
+                },
+                rh: Expression {
+                    kind: LiteralInt(
+                        14,
+                    ),
+                    span: Span(
+                        57,
+                        59,
+                    ),
+                    ty: "Int",
+                },
+            },
+            span: Span(
+                51,
+                59,
+            ),
+            ty: "Bool",
+        },
+        Expression {
+            kind: Infix {
+                op: NotEquals,
+                lh: Expression {
+                    kind: LiteralInt(
+                        15,
+                    ),
+                    span: Span(
+                        60,
+                        62,
+                    ),
+                    ty: "Int",
+                },
+                rh: Expression {
+                    kind: LiteralInt(
+                        16,
+                    ),
+                    span: Span(
+                        66,
+                        68,
+                    ),
+                    ty: "Int",
+                },
+            },
+            span: Span(
+                60,
+                68,
+            ),
+            ty: "Bool",
+        },
+        Expression {
+            kind: LiteralInt(
+                17,
+            ),
+            span: Span(
+                71,
+                73,
+            ),
+            ty: "Bool",
+        },
+    ],
+)

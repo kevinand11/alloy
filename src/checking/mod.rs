@@ -63,7 +63,7 @@ impl Checker {
             }
             ExpressionKind::Prefix { op, rh } => match op {
                 PrefixOp::Not => {
-                    let rh = self.check_expression(&*rh, Some("Bool"))?;
+                    let rh = self.check_expression(&*rh, None)?;
                     self.expect(&rh, "Bool", type_hint)
                 }
             },
@@ -73,15 +73,19 @@ impl Checker {
                 | InfixOp::Multiply
                 | InfixOp::Divide
                 | InfixOp::Power => {
-                    let lh = self.check_expression(&*lh, Some("Int"))?;
-                    let rh = self.check_expression(&*rh, Some("Int"))?;
+                    let (lh, lh_type) = self.check_expression_with_type_hints(&lh, vec!["Int", "Float"])?;
+                    let (rh, rh_type) = self.check_expression_with_type_hints(&rh, vec!["Int", "Float"])?;
+                    let res_type = match op {
+                        InfixOp::Divide => "Float",
+                        _ => Checker::choose_btw_types(lh_type, rh_type, "Float"),
+                    };
                     self.expect(
                         &expr.with_kind(ExpressionKind::Infix {
                             op,
                             lh: Box::new(lh),
                             rh: Box::new(rh),
                         }),
-                        "Int",
+                        res_type,
                         type_hint,
                     )
                 }
@@ -89,8 +93,8 @@ impl Checker {
                 | InfixOp::GreaterThan
                 | InfixOp::LessThanOrEqual
                 | InfixOp::GreaterThanOrEqual => {
-                    let lh = self.check_expression(&*lh, Some("Int"))?;
-                    let rh = self.check_expression(&*rh, Some("Int"))?;
+                    let (lh, _) = self.check_expression_with_type_hints(&*lh, vec!["Int", "Float"])?;
+                    let (rh, _) = self.check_expression_with_type_hints(&*rh, vec!["Int", "Float"])?;
                     self.expect(
                         &expr.with_kind(ExpressionKind::Infix {
                             op,
@@ -188,6 +192,33 @@ impl Checker {
                     type_hint,
                 )
             }
+        }
+    }
+
+    fn check_expression_with_type_hints<'a>(
+        &mut self,
+        expr: &Expression,
+        type_hints: Vec<&'a str>,
+    ) -> Result<(Expression, &'a str), CheckedAstError> {
+        let mut last_type_hint = None;
+        for type_hint in type_hints {
+            match self.check_expression(expr, Some(type_hint)) {
+                Ok(checked_expr) => return Ok((checked_expr, type_hint)),
+                Err(_) => last_type_hint = Some(type_hint),
+            }
+        }
+        Err(CheckedAstError::type_mismatch(
+            last_type_hint.unwrap_or("Unknown"),
+            "Unknown",
+            expr.span.clone(),
+        ))
+    }
+
+    fn choose_btw_types<'a>(type1: &'a str, type2: &'a str, or_else: &'a str) -> &'a str {
+        if type1 == type2 {
+            type1
+        } else {
+            or_else
         }
     }
 

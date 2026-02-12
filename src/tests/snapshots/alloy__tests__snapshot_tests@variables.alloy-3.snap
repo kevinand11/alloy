@@ -1,6 +1,6 @@
 ---
 source: src/tests/mod.rs
-expression: "Parser::new(&lexer).parse().unwrap()"
+expression: checked.unwrap()
 input_file: src/tests/cases/variables.alloy
 ---
 Ast(
@@ -16,7 +16,7 @@ Ast(
                         5,
                         6,
                     ),
-                    ty: "Unit",
+                    ty: "Int",
                 },
                 mutable: false,
                 ty: None,
@@ -38,7 +38,7 @@ Ast(
                         12,
                         13,
                     ),
-                    ty: "Unit",
+                    ty: "Int",
                 },
                 mutable: true,
                 ty: None,
@@ -63,7 +63,7 @@ Ast(
                                 23,
                                 24,
                             ),
-                            ty: "Unit",
+                            ty: "Int",
                         },
                         rh: Expression {
                             kind: Ident(
@@ -73,14 +73,14 @@ Ast(
                                 27,
                                 28,
                             ),
-                            ty: "Unit",
+                            ty: "Int",
                         },
                     },
                     span: Span(
                         23,
                         28,
                     ),
-                    ty: "Unit",
+                    ty: "Int",
                 },
                 mutable: true,
                 ty: Some(
@@ -96,24 +96,14 @@ Ast(
             ty: "Unit",
         },
         Expression {
-            kind: Prefix {
-                op: Not,
-                rh: Expression {
-                    kind: Ident(
-                        "c",
-                    ),
-                    span: Span(
-                        30,
-                        31,
-                    ),
-                    ty: "Unit",
-                },
-            },
+            kind: Ident(
+                "c",
+            ),
             span: Span(
-                29,
+                30,
                 31,
             ),
-            ty: "Unit",
+            ty: "Bool",
         },
         Expression {
             kind: VariableDecl {
@@ -126,7 +116,7 @@ Ast(
                         39,
                         43,
                     ),
-                    ty: "Unit",
+                    ty: "Bool",
                 },
                 mutable: false,
                 ty: None,
@@ -148,7 +138,7 @@ Ast(
                         49,
                         54,
                     ),
-                    ty: "Unit",
+                    ty: "Bool",
                 },
                 mutable: false,
                 ty: None,
@@ -163,24 +153,14 @@ Ast(
             kind: VariableDecl {
                 name: "f",
                 value: Expression {
-                    kind: Prefix {
-                        op: Not,
-                        rh: Expression {
-                            kind: Ident(
-                                "d",
-                            ),
-                            span: Span(
-                                62,
-                                63,
-                            ),
-                            ty: "Unit",
-                        },
-                    },
+                    kind: Ident(
+                        "d",
+                    ),
                     span: Span(
-                        61,
+                        62,
                         63,
                     ),
-                    ty: "Unit",
+                    ty: "Bool",
                 },
                 mutable: false,
                 ty: None,
@@ -195,34 +175,14 @@ Ast(
             kind: VariableDecl {
                 name: "g",
                 value: Expression {
-                    kind: Prefix {
-                        op: Not,
-                        rh: Expression {
-                            kind: Prefix {
-                                op: Not,
-                                rh: Expression {
-                                    kind: Ident(
-                                        "e",
-                                    ),
-                                    span: Span(
-                                        71,
-                                        72,
-                                    ),
-                                    ty: "Unit",
-                                },
-                            },
-                            span: Span(
-                                70,
-                                72,
-                            ),
-                            ty: "Unit",
-                        },
-                    },
+                    kind: Ident(
+                        "e",
+                    ),
                     span: Span(
-                        69,
+                        71,
                         72,
                     ),
-                    ty: "Unit",
+                    ty: "Bool",
                 },
                 mutable: false,
                 ty: None,
