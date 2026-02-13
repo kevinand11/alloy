@@ -19,7 +19,7 @@ Ast(
                                 0,
                                 2,
                             ),
-                            ty: "Unit",
+                            state: Unchecked,
                         },
                         rh: Expression {
                             kind: Block(
@@ -35,7 +35,7 @@ Ast(
                                                     6,
                                                     7,
                                                 ),
-                                                ty: "Unit",
+                                                state: Unchecked,
                                             },
                                             rh: Expression {
                                                 kind: LiteralInt(
@@ -45,14 +45,14 @@ Ast(
                                                     10,
                                                     11,
                                                 ),
-                                                ty: "Unit",
+                                                state: Unchecked,
                                             },
                                         },
                                         span: Span(
                                             6,
                                             11,
                                         ),
-                                        ty: "Unit",
+                                        state: Unchecked,
                                     },
                                 ],
                             ),
@@ -60,14 +60,14 @@ Ast(
                                 4,
                                 13,
                             ),
-                            ty: "Unit",
+                            state: Unchecked,
                         },
                     },
                     span: Span(
                         0,
                         13,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
                 rh: Expression {
                     kind: Infix {
@@ -83,7 +83,7 @@ Ast(
                                             17,
                                             18,
                                         ),
-                                        ty: "Unit",
+                                        state: Unchecked,
                                     },
                                 ],
                             ),
@@ -91,7 +91,7 @@ Ast(
                                 16,
                                 19,
                             ),
-                            ty: "Unit",
+                            state: Unchecked,
                         },
                         rh: Expression {
                             kind: LiteralInt(
@@ -101,21 +101,21 @@ Ast(
                                 22,
                                 23,
                             ),
-                            ty: "Unit",
+                            state: Unchecked,
                         },
                     },
                     span: Span(
                         16,
                         23,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
             },
             span: Span(
                 0,
                 23,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
     ],
 )

@@ -19,7 +19,9 @@ Ast(
                                 0,
                                 3,
                             ),
-                            ty: "Float",
+                            state: Checked(
+                                "Float",
+                            ),
                         },
                         rh: Expression {
                             kind: LiteralInt(
@@ -29,14 +31,18 @@ Ast(
                                 6,
                                 13,
                             ),
-                            ty: "Int",
+                            state: Checked(
+                                "Int",
+                            ),
                         },
                     },
                     span: Span(
                         0,
                         13,
                     ),
-                    ty: "Float",
+                    state: Checked(
+                        "Float",
+                    ),
                 },
                 rh: Expression {
                     kind: LiteralFloat(
@@ -46,14 +52,18 @@ Ast(
                         16,
                         20,
                     ),
-                    ty: "Float",
+                    state: Checked(
+                        "Float",
+                    ),
                 },
             },
             span: Span(
                 0,
                 20,
             ),
-            ty: "Float",
+            state: Checked(
+                "Float",
+            ),
         },
     ],
 )

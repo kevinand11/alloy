@@ -19,7 +19,7 @@ Ast(
                                 0,
                                 3,
                             ),
-                            ty: "Unit",
+                            state: Unchecked,
                         },
                         rh: Expression {
                             kind: LiteralInt(
@@ -29,14 +29,14 @@ Ast(
                                 6,
                                 13,
                             ),
-                            ty: "Unit",
+                            state: Unchecked,
                         },
                     },
                     span: Span(
                         0,
                         13,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
                 rh: Expression {
                     kind: LiteralFloat(
@@ -46,14 +46,14 @@ Ast(
                         16,
                         20,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
             },
             span: Span(
                 0,
                 20,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
     ],
 )

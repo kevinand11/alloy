@@ -15,7 +15,9 @@ Ast(
                         0,
                         1,
                     ),
-                    ty: "Int",
+                    state: Checked(
+                        "Int",
+                    ),
                 },
                 name: "to_unit",
                 args: [],
@@ -24,7 +26,9 @@ Ast(
                 0,
                 11,
             ),
-            ty: "Unit",
+            state: Checked(
+                "Unit",
+            ),
         },
         Expression {
             kind: VariableDecl {
@@ -37,7 +41,9 @@ Ast(
                         16,
                         20,
                     ),
-                    ty: "Bool",
+                    state: Checked(
+                        "Bool",
+                    ),
                 },
                 mutable: true,
                 ty: None,
@@ -46,7 +52,9 @@ Ast(
                 13,
                 20,
             ),
-            ty: "Unit",
+            state: Checked(
+                "Unit",
+            ),
         },
         Expression {
             kind: VariableAssignment {
@@ -59,14 +67,18 @@ Ast(
                         23,
                         28,
                     ),
-                    ty: "Bool",
+                    state: Checked(
+                        "Bool",
+                    ),
                 },
             },
             span: Span(
                 21,
                 28,
             ),
-            ty: "Unit",
+            state: Checked(
+                "Unit",
+            ),
         },
         Expression {
             kind: MethodCall {
@@ -78,7 +90,9 @@ Ast(
                         29,
                         30,
                     ),
-                    ty: "Int",
+                    state: Checked(
+                        "Int",
+                    ),
                 },
                 name: "to_unit",
                 args: [
@@ -90,7 +104,9 @@ Ast(
                             39,
                             40,
                         ),
-                        ty: "Bool",
+                        state: Checked(
+                            "Bool",
+                        ),
                     },
                     Expression {
                         kind: LiteralInt(
@@ -100,7 +116,9 @@ Ast(
                             41,
                             42,
                         ),
-                        ty: "Int",
+                        state: Checked(
+                            "Int",
+                        ),
                     },
                 ],
             },
@@ -108,7 +126,9 @@ Ast(
                 29,
                 43,
             ),
-            ty: "Unit",
+            state: Checked(
+                "Unit",
+            ),
         },
     ],
 )

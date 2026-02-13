@@ -15,7 +15,7 @@ Ast(
                         0,
                         1,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
                 name: "to_unit",
                 args: [],
@@ -24,7 +24,7 @@ Ast(
                 0,
                 11,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
         Expression {
             kind: VariableDecl {
@@ -37,7 +37,7 @@ Ast(
                         16,
                         20,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
                 mutable: true,
                 ty: None,
@@ -46,7 +46,7 @@ Ast(
                 13,
                 20,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
         Expression {
             kind: VariableAssignment {
@@ -59,14 +59,14 @@ Ast(
                         23,
                         28,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
             },
             span: Span(
                 21,
                 28,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
         Expression {
             kind: MethodCall {
@@ -78,7 +78,7 @@ Ast(
                         29,
                         30,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
                 name: "to_unit",
                 args: [
@@ -90,7 +90,7 @@ Ast(
                             39,
                             40,
                         ),
-                        ty: "Unit",
+                        state: Unchecked,
                     },
                     Expression {
                         kind: LiteralInt(
@@ -100,7 +100,7 @@ Ast(
                             41,
                             42,
                         ),
-                        ty: "Unit",
+                        state: Unchecked,
                     },
                 ],
             },
@@ -108,7 +108,7 @@ Ast(
                 29,
                 43,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
     ],
 )

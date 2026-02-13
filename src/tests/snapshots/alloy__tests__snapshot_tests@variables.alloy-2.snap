@@ -16,7 +16,7 @@ Ast(
                         5,
                         6,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
                 mutable: false,
                 ty: None,
@@ -25,7 +25,7 @@ Ast(
                 0,
                 6,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
         Expression {
             kind: VariableDecl {
@@ -38,7 +38,7 @@ Ast(
                         12,
                         13,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
                 mutable: true,
                 ty: None,
@@ -47,7 +47,7 @@ Ast(
                 7,
                 13,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
         Expression {
             kind: VariableDecl {
@@ -63,7 +63,7 @@ Ast(
                                 23,
                                 24,
                             ),
-                            ty: "Unit",
+                            state: Unchecked,
                         },
                         rh: Expression {
                             kind: Ident(
@@ -73,14 +73,14 @@ Ast(
                                 27,
                                 28,
                             ),
-                            ty: "Unit",
+                            state: Unchecked,
                         },
                     },
                     span: Span(
                         23,
                         28,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
                 mutable: true,
                 ty: Some(
@@ -93,7 +93,7 @@ Ast(
                 14,
                 28,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
         Expression {
             kind: Prefix {
@@ -106,14 +106,14 @@ Ast(
                         30,
                         31,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
             },
             span: Span(
                 29,
                 31,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
         Expression {
             kind: VariableDecl {
@@ -126,7 +126,7 @@ Ast(
                         39,
                         43,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
                 mutable: false,
                 ty: None,
@@ -135,7 +135,7 @@ Ast(
                 34,
                 43,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
         Expression {
             kind: VariableDecl {
@@ -148,7 +148,7 @@ Ast(
                         49,
                         54,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
                 mutable: false,
                 ty: None,
@@ -157,7 +157,7 @@ Ast(
                 44,
                 54,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
         Expression {
             kind: VariableDecl {
@@ -173,14 +173,14 @@ Ast(
                                 62,
                                 63,
                             ),
-                            ty: "Unit",
+                            state: Unchecked,
                         },
                     },
                     span: Span(
                         61,
                         63,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
                 mutable: false,
                 ty: None,
@@ -189,7 +189,7 @@ Ast(
                 56,
                 63,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
         Expression {
             kind: VariableDecl {
@@ -208,21 +208,21 @@ Ast(
                                         71,
                                         72,
                                     ),
-                                    ty: "Unit",
+                                    state: Unchecked,
                                 },
                             },
                             span: Span(
                                 70,
                                 72,
                             ),
-                            ty: "Unit",
+                            state: Unchecked,
                         },
                     },
                     span: Span(
                         69,
                         72,
                     ),
-                    ty: "Unit",
+                    state: Unchecked,
                 },
                 mutable: false,
                 ty: None,
@@ -231,7 +231,7 @@ Ast(
                 64,
                 72,
             ),
-            ty: "Unit",
+            state: Unchecked,
         },
     ],
 )

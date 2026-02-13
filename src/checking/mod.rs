@@ -16,8 +16,6 @@ pub struct Checker {
     scope_manager: ScopeManager,
 }
 
-type Type<'a> = &'a str;
-
 impl Checker {
     pub fn new() -> Self {
         Self {
@@ -173,7 +171,8 @@ impl Checker {
                     self.check_expression(&value, None)?
                 };
 
-                self.scope_manager.add_var(name.as_str(),value.ty().unwrap());
+                self.scope_manager
+                    .add_var(name.as_str(), value.ty().unwrap());
                 self.expect(
                     &expr.with_kind(ExpressionKind::VariableDecl {
                         name: name.clone(),
@@ -196,7 +195,8 @@ impl Checker {
                     }
                 };
 
-                self.scope_manager.add_var(name.as_str(), value.ty().unwrap());
+                self.scope_manager
+                    .add_var(name.as_str(), value.ty().unwrap());
                 self.expect(
                     &expr.with_kind(ExpressionKind::VariableAssignment {
                         name: name.clone(),
@@ -217,7 +217,10 @@ impl Checker {
                     .map(|arg| self.check_expression(&arg, None))
                     .collect::<Result<Vec<_>, _>>()?;
                 self.expect(
-                    &expr.with_kind(ExpressionKind::FunctionCall { name: name.clone(), args }),
+                    &expr.with_kind(ExpressionKind::FunctionCall {
+                        name: name.clone(),
+                        args,
+                    }),
                     "Unit",
                     type_hint,
                 )
