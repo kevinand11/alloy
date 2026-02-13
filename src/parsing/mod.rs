@@ -1,20 +1,20 @@
 use std::iter::Peekable;
 
 use crate::{
-    common::span::Span,
+    common::{
+        ast::Ast,
+        expression::{Expression, ExpressionKind, InfixOp, PrefixOp, TypeIdent},
+        span::Span,
+    },
     lexing::{
         Lexer, TokenIter,
         token::{Token, TokenKind},
     },
-    parsing::{
-        expression::{Expression, ExpressionKind, InfixOp, PrefixOp, TypeIdent},
-        precedence::Precedence,
-    },
+    parsing::precedence::Precedence,
 };
-use ast::{Ast, AstError};
+use errors::ParseError;
 
-pub mod ast;
-pub mod expression;
+pub mod errors;
 pub mod precedence;
 
 pub struct Parser<'a> {
@@ -28,7 +28,7 @@ impl<'a> Parser<'a> {
         Self { lexer, tokens }
     }
 
-    pub fn parse(&mut self) -> Result<Ast, AstError> {
+    pub fn parse(&mut self) -> Result<Ast, ParseError> {
         let mut exprs = vec![];
         while self.tokens.peek().is_some() {
             exprs.push(self.parse_expression(&Precedence::Lowest)?);
@@ -36,7 +36,7 @@ impl<'a> Parser<'a> {
         Ok(Ast(exprs))
     }
 
-    fn parse_expression(&mut self, precedence: &Precedence) -> Result<Expression, AstError> {
+    fn parse_expression(&mut self, precedence: &Precedence) -> Result<Expression, ParseError> {
         let mut expr = self.get_first_expression()?;
 
         while &Precedence::of(self.peek_kind()) > precedence {
@@ -66,22 +66,19 @@ impl<'a> Parser<'a> {
 
                 TokenKind::Dot => {
                     self.consume()?;
-                    let fn_call = self.parse_function_call(&expr.span)?;
-                    let total_span = expr.span.to(&fn_call.span);
-                    match fn_call.kind {
-                        ExpressionKind::FunctionCall { name, args } => Expression::new(
-                            ExpressionKind::MethodCall {
-                                caller: Box::new(expr),
-                                name,
-                                args,
-                            },
-                            total_span,
-                        ),
-                        _ => unreachable!(),
-                    }
+                    let (name, args, span) = self.parse_function_call(&expr.span)?;
+                    let total_span = expr.span.to(&span);
+                    Expression::new(
+                        ExpressionKind::MethodCall {
+                            caller: Box::new(expr),
+                            name,
+                            args,
+                        },
+                        total_span,
+                    )
                 }
 
-                _ => return Err(AstError::syntax(&self.consume()?, "illegal token found")),
+                _ => return Err(ParseError::syntax(&self.consume()?, "illegal token found")),
             };
         }
 
@@ -92,7 +89,7 @@ impl<'a> Parser<'a> {
         &mut self,
         lhs: Expression,
         op: InfixOp,
-    ) -> Result<Expression, AstError> {
+    ) -> Result<Expression, ParseError> {
         let token = self.consume()?;
         let precedence = Precedence::of(&token.kind);
         let rhs = self.parse_expression(&precedence)?;
@@ -107,7 +104,7 @@ impl<'a> Parser<'a> {
         ))
     }
 
-    fn get_first_expression(&mut self) -> Result<Expression, AstError> {
+    fn get_first_expression(&mut self) -> Result<Expression, ParseError> {
         match self.peek_kind() {
             TokenKind::Comment => {
                 self.consume()?;
@@ -125,11 +122,11 @@ impl<'a> Parser<'a> {
                     _ => self.parse_variable_usage(token),
                 }
             }
-            _ => Err(AstError::no_prefix_parse(&self.consume()?)),
+            _ => Err(ParseError::no_prefix_parse(&self.consume()?)),
         }
     }
 
-    fn parse_block_expression(&mut self) -> Result<Expression, AstError> {
+    fn parse_block_expression(&mut self) -> Result<Expression, ParseError> {
         let start = self.expect(TokenKind::LBrace)?;
         let mut exprs = vec![];
         while self.peek_kind() != &TokenKind::RBrace {
@@ -142,7 +139,7 @@ impl<'a> Parser<'a> {
         ))
     }
 
-    fn parse_prefix_expression(&mut self, op: PrefixOp) -> Result<Expression, AstError> {
+    fn parse_prefix_expression(&mut self, op: PrefixOp) -> Result<Expression, ParseError> {
         let start = self.expect(TokenKind::Exclamation)?;
         let expr = self.parse_expression(&Precedence::Prefix)?;
         let new_span = start.span.to(&expr.span);
@@ -155,7 +152,7 @@ impl<'a> Parser<'a> {
         ))
     }
 
-    fn parse_number(&mut self) -> Result<Expression, AstError> {
+    fn parse_number(&mut self) -> Result<Expression, ParseError> {
         let token = self.expect(TokenKind::Number)?;
 
         let raw = self.lexer.module.span_slice(&token.span);
@@ -164,34 +161,40 @@ impl<'a> Parser<'a> {
         if cleaned.contains('.') {
             let num: f32 = cleaned
                 .parse()
-                .map_err(|_| AstError::syntax(&token, "invalid float"))?;
-            Ok(Expression::new(ExpressionKind::LiteralFloat(num), token.span))
+                .map_err(|_| ParseError::syntax(&token, "invalid float"))?;
+            Ok(Expression::new(
+                ExpressionKind::LiteralFloat(num),
+                token.span,
+            ))
         } else {
             let num: isize = cleaned
                 .parse()
-                .map_err(|_| AstError::syntax(&token, "invalid int"))?;
+                .map_err(|_| ParseError::syntax(&token, "invalid int"))?;
             Ok(Expression::new(ExpressionKind::LiteralInt(num), token.span))
         }
     }
 
-    fn parse_boolean(&mut self) -> Result<Expression, AstError> {
+    fn parse_boolean(&mut self) -> Result<Expression, ParseError> {
         let token = self.expect(TokenKind::Boolean)?;
 
         let value = match self.lexer.module.token(&token) {
             "true" => true,
             "false" => false,
-            _ => return Err(AstError::syntax(&token, "invalid bool")),
+            _ => return Err(ParseError::syntax(&token, "invalid bool")),
         };
 
-        Ok(Expression::new(ExpressionKind::LiteralBool(value), token.span))
+        Ok(Expression::new(
+            ExpressionKind::LiteralBool(value),
+            token.span,
+        ))
     }
 
-    fn parse_type(&mut self) -> Result<TypeIdent, AstError> {
+    fn parse_type(&mut self) -> Result<TypeIdent, ParseError> {
         let token = self.expect(TokenKind::Ident)?;
         Ok(TypeIdent(self.lexer.module.token(&token).to_string()))
     }
 
-    fn parse_variable_declaration(&mut self, start: Token) -> Result<Expression, AstError> {
+    fn parse_variable_declaration(&mut self, start: Token) -> Result<Expression, ParseError> {
         let name = self.lexer.module.token(&start).to_string();
         self.consume()?;
         let mut ty = None;
@@ -203,7 +206,7 @@ impl<'a> Parser<'a> {
             TokenKind::Colon => false,
             TokenKind::Equals => true,
             _ => {
-                return Err(AstError::expected(
+                return Err(ParseError::expected(
                     &start,
                     vec![TokenKind::Colon, TokenKind::Equals],
                 ));
@@ -224,7 +227,7 @@ impl<'a> Parser<'a> {
         ))
     }
 
-    fn parse_variable_assignment(&mut self, start: Token) -> Result<Expression, AstError> {
+    fn parse_variable_assignment(&mut self, start: Token) -> Result<Expression, ParseError> {
         let name = self.lexer.module.token(&start).to_string();
         self.consume()?;
         let value = self.parse_expression(&Precedence::Lowest)?;
@@ -238,12 +241,15 @@ impl<'a> Parser<'a> {
         ))
     }
 
-    fn parse_variable_usage(&mut self, start: Token) -> Result<Expression, AstError> {
+    fn parse_variable_usage(&mut self, start: Token) -> Result<Expression, ParseError> {
         let name = (*self).lexer.module.token(&start).to_string();
         Ok(Expression::new(ExpressionKind::Ident(name), start.span))
     }
 
-    fn parse_function_call(&mut self, start: &Span) -> Result<Expression, AstError> {
+    fn parse_function_call(
+        &mut self,
+        start: &Span,
+    ) -> Result<(String, Vec<Expression>, Span), ParseError> {
         let ident = self.expect(TokenKind::Ident)?;
         self.expect(TokenKind::LParen)?;
         let mut args = vec![];
@@ -255,31 +261,25 @@ impl<'a> Parser<'a> {
                     if self.peek_kind() == &TokenKind::Comma {
                         self.consume()?;
                     }
-                },
+                }
             }
-        };
+        }
         let end = self.expect(TokenKind::RParen)?;
         let span = start.to(&end.span);
-        Ok(Expression::new(
-            ExpressionKind::FunctionCall {
-                name: self.lexer.module.token(&ident).to_string(),
-                args,
-            },
-            span,
-        ))
+        Ok((self.lexer.module.token(&ident).to_string(), args, span))
     }
 
-    fn expect(&mut self, exp: TokenKind) -> Result<Token, AstError> {
+    fn expect(&mut self, exp: TokenKind) -> Result<Token, ParseError> {
         let token = self.consume()?;
         if token.kind == exp {
             Ok(token)
         } else {
-            Err((&AstError::expected)(&token, vec![exp]))
+            Err((&ParseError::expected)(&token, vec![exp]))
         }
     }
 
-    fn consume(&mut self) -> Result<Token, AstError> {
-        Ok(self.tokens.next().ok_or(AstError::eof())?)
+    fn consume(&mut self) -> Result<Token, ParseError> {
+        Ok(self.tokens.next().ok_or(ParseError::eof())?)
     }
 
     fn peek_kind(&mut self) -> &TokenKind {

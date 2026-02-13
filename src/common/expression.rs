@@ -1,4 +1,4 @@
-use crate::common::span::Span;
+use super::span::Span;
 
 #[derive(Clone, Debug)]
 pub enum ExpressionKind {
@@ -44,12 +44,12 @@ pub enum ExpressionKind {
     },
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum PrefixOp {
     Not,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum InfixOp {
     Add,
     Subtract,
@@ -65,10 +65,16 @@ pub enum InfixOp {
 }
 
 #[derive(Clone, Debug)]
+pub enum ExpressionState {
+    Checked(String),
+    Unchecked,
+}
+
+#[derive(Clone, Debug)]
 pub struct Expression {
     pub kind: ExpressionKind,
     pub span: Span,
-    pub ty: String,
+    pub state: ExpressionState,
 }
 
 impl Expression {
@@ -76,21 +82,28 @@ impl Expression {
         Self {
             kind,
             span,
-            ty: "Unit".to_string(),
+            state: ExpressionState::Unchecked,
         }
     }
-    pub fn with_type(&self, ty: &str) -> Self {
+    pub fn mark_checked(&self, ty: &str) -> Self {
         Self {
             kind: self.kind.clone(),
             span: self.span.clone(),
-            ty: ty.to_string(),
+            state: ExpressionState::Checked(ty.to_string()),
         }
     }
+    pub fn ty(&self) -> Option<&str> {
+        match &self.state {
+            ExpressionState::Checked(ty) => Some(ty),
+            ExpressionState::Unchecked => None,
+        }
+    }
+
     pub fn with_kind(&self, kind: ExpressionKind) -> Self {
         Self {
-            kind,
             span: self.span.clone(),
-            ty: self.ty.clone(),
+            state: self.state.clone(),
+            kind,
         }
     }
 }

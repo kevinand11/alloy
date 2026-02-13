@@ -1,9 +1,9 @@
 use crate::{
     checking::{
-        errors::CheckedAstError,
+        errors::CheckError,
         scope::{ScopeManager, ScopedVar},
     },
-    parsing::{
+    common::{
         ast::Ast,
         expression::{Expression, ExpressionKind, InfixOp, PrefixOp},
     },
@@ -16,6 +16,8 @@ pub struct Checker {
     scope_manager: ScopeManager,
 }
 
+type Type<'a> = &'a str;
+
 impl Checker {
     pub fn new() -> Self {
         Self {
@@ -23,7 +25,7 @@ impl Checker {
         }
     }
 
-    pub fn check(&mut self, ast: Ast) -> Result<Ast, Vec<CheckedAstError>> {
+    pub fn check(&mut self, ast: Ast) -> Result<Ast, Vec<CheckError>> {
         let mut checked_exprs = vec![];
         let mut errors = vec![];
         for expr in ast.0 {
@@ -42,8 +44,8 @@ impl Checker {
         &mut self,
         expr: &Expression,
         type_hint: Option<&str>,
-    ) -> Result<Expression, CheckedAstError> {
-        match expr.kind.clone() {
+    ) -> Result<Expression, CheckError> {
+        match &expr.kind {
             ExpressionKind::LiteralBool(_) => self.expect(expr, "Bool", type_hint),
             ExpressionKind::LiteralInt(_) => self.expect(expr, "Int", type_hint),
             ExpressionKind::LiteralFloat(_) => self.expect(expr, "Float", type_hint),
@@ -54,7 +56,7 @@ impl Checker {
                         self.expect(expr, &type_name, type_hint)
                     }
                     None => {
-                        return Err(CheckedAstError::variable_not_found(&name, &expr.span));
+                        return Err(CheckError::variable_not_found(&name, &expr.span));
                     }
                 }
             }
@@ -63,7 +65,7 @@ impl Checker {
                     let rh = self.check_expression(&rh, None)?;
                     self.expect(
                         &expr.with_kind(ExpressionKind::Prefix {
-                            op,
+                            op: *op,
                             rh: Box::new(rh),
                         }),
                         "Bool",
@@ -77,17 +79,15 @@ impl Checker {
                 | InfixOp::Multiply
                 | InfixOp::Divide
                 | InfixOp::Power => {
-                    let (lh, lh_type) =
-                        self.check_expression_with_type_hints(&lh, vec!["Int", "Float"])?;
-                    let (rh, rh_type) =
-                        self.check_expression_with_type_hints(&rh, vec!["Int", "Float"])?;
+                    let (lh, lh_type) = self.expect_with_types(&lh, vec!["Int", "Float"])?;
+                    let (rh, rh_type) = self.expect_with_types(&rh, vec!["Int", "Float"])?;
                     let res_type = match op {
                         InfixOp::Divide => "Float",
                         _ => Checker::choose_btw_types(lh_type, rh_type, "Float"),
                     };
                     self.expect(
                         &expr.with_kind(ExpressionKind::Infix {
-                            op,
+                            op: *op,
                             lh: Box::new(lh),
                             rh: Box::new(rh),
                         }),
@@ -99,13 +99,11 @@ impl Checker {
                 | InfixOp::GreaterThan
                 | InfixOp::LessThanOrEqual
                 | InfixOp::GreaterThanOrEqual => {
-                    let (lh, _) =
-                        self.check_expression_with_type_hints(&*lh, vec!["Int", "Float"])?;
-                    let (rh, _) =
-                        self.check_expression_with_type_hints(&*rh, vec!["Int", "Float"])?;
+                    let (lh, _) = self.expect_with_types(&lh, vec!["Int", "Float"])?;
+                    let (rh, _) = self.expect_with_types(&rh, vec!["Int", "Float"])?;
                     self.expect(
                         &expr.with_kind(ExpressionKind::Infix {
-                            op,
+                            op: *op,
                             lh: Box::new(lh),
                             rh: Box::new(rh),
                         }),
@@ -114,20 +112,16 @@ impl Checker {
                     )
                 }
                 InfixOp::Equals | InfixOp::NotEquals => {
-                    let lh = self.check_expression(&*lh, None)?;
-                    let rh = self.check_expression(&*rh, None)?;
-                    if lh.ty != rh.ty {
-                        Err(CheckedAstError::type_mismatch(&lh.ty, &rh.ty, &expr.span))
+                    let lh = self.check_expression(&lh, None)?;
+                    let rh = self.check_expression(&rh, None)?;
+                    if lh.ty().unwrap() != rh.ty().unwrap() {
+                        Err(CheckError::type_mismatch(
+                            vec![lh.ty().unwrap()],
+                            rh.ty().unwrap(),
+                            &expr.span,
+                        ))
                     } else {
-                        self.expect(
-                            &expr.with_kind(ExpressionKind::Infix {
-                                op,
-                                lh: Box::new(lh),
-                                rh: Box::new(rh),
-                            }),
-                            "Bool",
-                            type_hint,
-                        )
+                        self.expect(expr, "Bool", type_hint)
                     }
                 }
             },
@@ -135,29 +129,30 @@ impl Checker {
                 let new_scope = self.scope_manager.create_scope(self.scope_manager.cur);
                 let original_scope = self.scope_manager.cur;
                 self.scope_manager.cur = new_scope;
-
+                let len = exprs.len();
                 let mut checked_exprs = vec![];
+
                 for (index, expr) in exprs.iter().enumerate() {
-                    let checked_expr = self.check_expression(
+                    let expr = self.check_expression(
                         expr,
-                        match index == exprs.len() - 1 {
+                        match index == len - 1 {
                             true => type_hint,
                             false => None,
                         },
                     )?;
-                    checked_exprs.push(checked_expr);
+                    checked_exprs.push(expr);
                 }
 
                 let block_type = match checked_exprs.last() {
-                    Some(expr) => &expr.ty.clone(),
-                    None => "Unit",
+                    Some(expr) => expr.ty().unwrap().to_string(),
+                    None => "Unit".to_string(),
                 };
 
                 self.scope_manager.cur = original_scope;
 
                 self.expect(
                     &expr.with_kind(ExpressionKind::Block(checked_exprs)),
-                    block_type,
+                    block_type.as_str(),
                     type_hint,
                 )
             }
@@ -167,30 +162,24 @@ impl Checker {
                 mutable,
                 ty,
             } => {
-                let value = if let Some(ty) = &ty {
-                    match self
+                let value = if let Some(ty) = ty {
+                    let scope_type = self
                         .scope_manager
                         .lookup_type(&ty.0, self.scope_manager.cur)
-                    {
-                        Some(ty) => {
-                            let ty_name = ty.name.clone();
-                            self.check_expression(&*value, Some(&ty_name))?
-                        }
-                        None => {
-                            return Err(CheckedAstError::type_not_found(&ty.0, &expr.span));
-                        }
-                    }
+                        .ok_or(CheckError::type_not_found(&ty.0, &expr.span))?;
+                    let type_name = &scope_type.name.clone();
+                    self.check_expression(&value, Some(type_name.as_str()))?
                 } else {
-                    self.check_expression(&*value, None)?
+                    self.check_expression(&value, None)?
                 };
 
-                self.scope_manager.add_var(name.as_str(), &value.ty);
+                self.scope_manager.add_var(name.as_str(),value.ty().unwrap());
                 self.expect(
                     &expr.with_kind(ExpressionKind::VariableDecl {
-                        name,
+                        name: name.clone(),
                         value: Box::new(value),
-                        mutable,
-                        ty,
+                        mutable: *mutable,
+                        ty: ty.clone(),
                     }),
                     "Unit",
                     type_hint,
@@ -199,18 +188,18 @@ impl Checker {
             ExpressionKind::VariableAssignment { name, value } => {
                 let value = match self.scope_manager.lookup_var(&name, self.scope_manager.cur) {
                     Some(var) => {
-                        let type_name = var.type_name.clone();
-                        self.check_expression(&*value, Some(&type_name))?
+                        let type_name = &var.type_name.clone();
+                        self.check_expression(&value, Some(type_name))?
                     }
                     None => {
-                        return Err(CheckedAstError::variable_not_found(&name, &expr.span));
+                        return Err(CheckError::variable_not_found(&name, &expr.span));
                     }
                 };
 
-                self.scope_manager.add_var(name.as_str(), &value.ty);
+                self.scope_manager.add_var(name.as_str(), value.ty().unwrap());
                 self.expect(
                     &expr.with_kind(ExpressionKind::VariableAssignment {
-                        name,
+                        name: name.clone(),
                         value: Box::new(value),
                     }),
                     "Unit",
@@ -221,14 +210,14 @@ impl Checker {
                 // Hardcoded for now, will implement proper function definitions and lookups later
                 // also verify argument types and length matches fn type and length
                 if name != "to_unit" {
-                    return Err(CheckedAstError::function_not_found(&name, &expr.span));
+                    return Err(CheckError::function_not_found(&name, &expr.span));
                 }
                 let args = args
                     .into_iter()
                     .map(|arg| self.check_expression(&arg, None))
                     .collect::<Result<Vec<_>, _>>()?;
                 self.expect(
-                    &expr.with_kind(ExpressionKind::FunctionCall { name, args }),
+                    &expr.with_kind(ExpressionKind::FunctionCall { name: name.clone(), args }),
                     "Unit",
                     type_hint,
                 )
@@ -237,16 +226,16 @@ impl Checker {
                 // Hardcoded for now, will implement proper function definitions and lookups later
                 // also verify argument types and length matches method type and length and caller type
                 if name != "to_unit" {
-                    return Err(CheckedAstError::method_not_found(&name, &expr.span));
+                    return Err(CheckError::method_not_found(&name, &expr.span));
                 }
-                let caller = self.check_expression(&*caller, None)?;
+                let caller = self.check_expression(&caller, None)?;
                 let args = args
                     .into_iter()
                     .map(|arg| self.check_expression(&arg, None))
                     .collect::<Result<Vec<_>, _>>()?;
                 self.expect(
                     &expr.with_kind(ExpressionKind::MethodCall {
-                        name,
+                        name: name.clone(),
                         args,
                         caller: Box::new(caller),
                     }),
@@ -257,45 +246,39 @@ impl Checker {
         }
     }
 
-    fn check_expression_with_type_hints<'a>(
+    fn expect_with_types<'a>(
         &mut self,
         expr: &Expression,
         type_hints: Vec<&'a str>,
-    ) -> Result<(Expression, &'a str), CheckedAstError> {
-        let mut last_type_hint = None;
-        for type_hint in type_hints {
+    ) -> Result<(Expression, &'a str), CheckError> {
+        for type_hint in &type_hints {
             match self.check_expression(expr, Some(type_hint)) {
                 Ok(checked_expr) => return Ok((checked_expr, type_hint)),
-                Err(_) => last_type_hint = Some(type_hint),
+                Err(_) => (),
             }
         }
-        Err(CheckedAstError::type_mismatch(
-            last_type_hint.unwrap_or("Unknown"),
-            "Unknown",
-            &expr.span,
-        ))
+        Err(CheckError::type_mismatch(type_hints, "Unknown", &expr.span))
     }
 
     fn choose_btw_types<'a>(type1: &'a str, type2: &'a str, or_else: &'a str) -> &'a str {
         if type1 == type2 { type1 } else { or_else }
     }
 
-    fn expect(
+    fn expect<'a>(
         &self,
         expr: &Expression,
-        res_type: &str,
+        res_type: &'a str,
         type_hint: Option<&str>,
-    ) -> Result<Expression, CheckedAstError> {
+    ) -> Result<Expression, CheckError> {
         if let Some(type_hint) = type_hint {
             if type_hint == res_type {
-                Ok(expr.with_type(res_type))
+                Ok(expr.mark_checked(res_type))
             } else {
-                Err(CheckedAstError::type_mismatch(
-                    type_hint, res_type, &expr.span,
-                ))
+                let span = &expr.span;
+                Err(CheckError::type_mismatch(vec![type_hint], res_type, span))
             }
         } else {
-            Ok(expr.with_type(res_type))
+            Ok(expr.mark_checked(res_type))
         }
     }
 }
