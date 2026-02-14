@@ -1,0 +1,15 @@
+type A := Int
+type B := A
+
+a:Int : 3
+b:A : 4
+c:B :5
+
+a
+b
+c
+
+d: Int = b
+e: Int = c
+
+f: A = c

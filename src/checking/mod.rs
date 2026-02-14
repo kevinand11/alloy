@@ -58,6 +58,7 @@ impl Checker {
                         name: _,
                         type_id,
                         mutable: _,
+                        scope_id: _,
                     }) => self.expect(expr, *type_id, type_hint),
                     None => {
                         return Err(CheckError::variable_not_found(&name, &expr.span));
@@ -173,7 +174,7 @@ impl Checker {
                         .scope_manager
                         .lookup_type(&ty.0, self.scope_manager.cur)
                         .ok_or(CheckError::type_name_not_found(&ty.0, &expr.span))?;
-                    self.check_expression(&value, Some(scope_type.id))?
+                    self.check_expression(&value, Some((*scope_type).id))?
                 } else {
                     self.check_expression(&value, None)?
                 };
@@ -293,23 +294,40 @@ impl Checker {
     fn expect<'a>(
         &self,
         expr: &Expression,
-        exp_type: ScopeTypeId,
-        type_hint: Option<ScopeTypeId>,
+        got_type: ScopeTypeId,
+        exp_type: Option<ScopeTypeId>,
     ) -> Result<Expression, CheckError> {
-        let scope_type = self
+        let got_scope_type = self
             .scope_manager
-            .get_type(exp_type, self.scope_manager.cur)
-            .ok_or(CheckError::type_not_found(exp_type, &expr.span))?;
+            .get_type(got_type, self.scope_manager.cur)
+            .ok_or(CheckError::type_not_found(got_type, &expr.span))?;
+        let exp_scope_type = match exp_type {
+            Some(hint) => self
+                .scope_manager
+                .get_type(hint, self.scope_manager.cur)
+                .ok_or(CheckError::type_not_found(hint, &expr.span))?,
+            None => return Ok(expr.mark_checked((&got_scope_type.name, got_scope_type.id))),
+        };
 
-        if let Some(type_hint) = type_hint {
-            if type_hint == exp_type {
-                Ok(expr.mark_checked((&scope_type.name, scope_type.id)))
-            } else {
-                let span = &expr.span;
-                Err(CheckError::type_mismatch(vec![type_hint], exp_type, span))
-            }
-        } else {
-            Ok(expr.mark_checked((&scope_type.name, scope_type.id)))
+        if self
+            .scope_manager
+            .is_child_type(got_scope_type.id, exp_scope_type.id)
+        {
+            return Ok(expr.mark_checked((&exp_scope_type.name, exp_scope_type.id)));
         }
+
+        if self
+            .scope_manager
+            .is_child_type(exp_scope_type.id, got_scope_type.id)
+            && got_scope_type.scope_id == 0
+        {
+            return Ok(expr.mark_checked((&exp_scope_type.name, exp_scope_type.id)));
+        }
+
+        return Err(CheckError::type_mismatch(
+            vec![exp_scope_type.id],
+            got_scope_type.id,
+            &expr.span,
+        ));
     }
 }

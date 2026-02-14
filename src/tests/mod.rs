@@ -22,12 +22,15 @@ fn snapshot_tests() {
 
         let ast = parser.parse();
         if ast.is_err() {
-            println!("err {:?}", ast)
+            println!("{:?} for path {:?}", ast, path);
         }
         assert!(ast.is_ok());
         insta::assert_debug_snapshot!(Parser::new(&lexer).parse().unwrap());
 
         let checked = checker.check(ast.unwrap());
+        if checked.is_err() {
+            println!("{:?} for path {:?}", checked, path);
+        }
         assert!(checked.is_ok());
         insta::assert_debug_snapshot!(checked.unwrap());
     });

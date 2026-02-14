@@ -1,0 +1,272 @@
+---
+source: src/tests/mod.rs
+expression: checked.unwrap()
+input_file: src/tests/cases/types.alloy
+---
+Ast(
+    [
+        Expression {
+            kind: TypeDecl {
+                name: "A",
+                value: TypeIdent(
+                    "Int",
+                ),
+            },
+            span: Span(
+                0,
+                13,
+            ),
+            state: Checked(
+                "Unit",
+                1,
+            ),
+        },
+        Expression {
+            kind: TypeDecl {
+                name: "B",
+                value: TypeIdent(
+                    "A",
+                ),
+            },
+            span: Span(
+                14,
+                25,
+            ),
+            state: Checked(
+                "Unit",
+                1,
+            ),
+        },
+        Expression {
+            kind: VariableDecl {
+                name: "a",
+                value: Expression {
+                    kind: LiteralInt(
+                        3,
+                    ),
+                    span: Span(
+                        35,
+                        36,
+                    ),
+                    state: Checked(
+                        "Int",
+                        2,
+                    ),
+                },
+                mutable: false,
+                ty: Some(
+                    TypeIdent(
+                        "Int",
+                    ),
+                ),
+            },
+            span: Span(
+                27,
+                36,
+            ),
+            state: Checked(
+                "Unit",
+                1,
+            ),
+        },
+        Expression {
+            kind: VariableDecl {
+                name: "b",
+                value: Expression {
+                    kind: LiteralInt(
+                        4,
+                    ),
+                    span: Span(
+                        43,
+                        44,
+                    ),
+                    state: Checked(
+                        "A",
+                        5,
+                    ),
+                },
+                mutable: false,
+                ty: Some(
+                    TypeIdent(
+                        "A",
+                    ),
+                ),
+            },
+            span: Span(
+                37,
+                44,
+            ),
+            state: Checked(
+                "Unit",
+                1,
+            ),
+        },
+        Expression {
+            kind: VariableDecl {
+                name: "c",
+                value: Expression {
+                    kind: LiteralInt(
+                        5,
+                    ),
+                    span: Span(
+                        50,
+                        51,
+                    ),
+                    state: Checked(
+                        "B",
+                        6,
+                    ),
+                },
+                mutable: false,
+                ty: Some(
+                    TypeIdent(
+                        "B",
+                    ),
+                ),
+            },
+            span: Span(
+                45,
+                51,
+            ),
+            state: Checked(
+                "Unit",
+                1,
+            ),
+        },
+        Expression {
+            kind: Ident(
+                "a",
+            ),
+            span: Span(
+                53,
+                54,
+            ),
+            state: Checked(
+                "Int",
+                2,
+            ),
+        },
+        Expression {
+            kind: Ident(
+                "b",
+            ),
+            span: Span(
+                55,
+                56,
+            ),
+            state: Checked(
+                "A",
+                5,
+            ),
+        },
+        Expression {
+            kind: Ident(
+                "c",
+            ),
+            span: Span(
+                57,
+                58,
+            ),
+            state: Checked(
+                "B",
+                6,
+            ),
+        },
+        Expression {
+            kind: VariableDecl {
+                name: "d",
+                value: Expression {
+                    kind: Ident(
+                        "b",
+                    ),
+                    span: Span(
+                        69,
+                        70,
+                    ),
+                    state: Checked(
+                        "Int",
+                        2,
+                    ),
+                },
+                mutable: true,
+                ty: Some(
+                    TypeIdent(
+                        "Int",
+                    ),
+                ),
+            },
+            span: Span(
+                60,
+                70,
+            ),
+            state: Checked(
+                "Unit",
+                1,
+            ),
+        },
+        Expression {
+            kind: VariableDecl {
+                name: "e",
+                value: Expression {
+                    kind: Ident(
+                        "c",
+                    ),
+                    span: Span(
+                        80,
+                        81,
+                    ),
+                    state: Checked(
+                        "Int",
+                        2,
+                    ),
+                },
+                mutable: true,
+                ty: Some(
+                    TypeIdent(
+                        "Int",
+                    ),
+                ),
+            },
+            span: Span(
+                71,
+                81,
+            ),
+            state: Checked(
+                "Unit",
+                1,
+            ),
+        },
+        Expression {
+            kind: VariableDecl {
+                name: "f",
+                value: Expression {
+                    kind: Ident(
+                        "c",
+                    ),
+                    span: Span(
+                        90,
+                        91,
+                    ),
+                    state: Checked(
+                        "A",
+                        5,
+                    ),
+                },
+                mutable: true,
+                ty: Some(
+                    TypeIdent(
+                        "A",
+                    ),
+                ),
+            },
+            span: Span(
+                83,
+                91,
+            ),
+            state: Checked(
+                "Unit",
+                1,
+            ),
+        },
+    ],
+)
