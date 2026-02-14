@@ -21,6 +21,7 @@ Ast(
                             ),
                             state: Checked(
                                 "Float",
+                                3,
                             ),
                         },
                         rh: Expression {
@@ -33,6 +34,7 @@ Ast(
                             ),
                             state: Checked(
                                 "Int",
+                                2,
                             ),
                         },
                     },
@@ -42,6 +44,7 @@ Ast(
                     ),
                     state: Checked(
                         "Float",
+                        3,
                     ),
                 },
                 rh: Expression {
@@ -54,6 +57,7 @@ Ast(
                     ),
                     state: Checked(
                         "Float",
+                        3,
                     ),
                 },
             },
@@ -63,6 +67,7 @@ Ast(
             ),
             state: Checked(
                 "Float",
+                3,
             ),
         },
     ],

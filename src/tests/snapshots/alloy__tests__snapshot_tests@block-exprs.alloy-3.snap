@@ -21,6 +21,7 @@ Ast(
                             ),
                             state: Checked(
                                 "Int",
+                                2,
                             ),
                         },
                         rh: Expression {
@@ -39,6 +40,7 @@ Ast(
                                                 ),
                                                 state: Checked(
                                                     "Int",
+                                                    2,
                                                 ),
                                             },
                                             rh: Expression {
@@ -51,6 +53,7 @@ Ast(
                                                 ),
                                                 state: Checked(
                                                     "Int",
+                                                    2,
                                                 ),
                                             },
                                         },
@@ -60,6 +63,7 @@ Ast(
                                         ),
                                         state: Checked(
                                             "Int",
+                                            2,
                                         ),
                                     },
                                 ],
@@ -70,6 +74,7 @@ Ast(
                             ),
                             state: Checked(
                                 "Int",
+                                2,
                             ),
                         },
                     },
@@ -79,6 +84,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
                 rh: Expression {
@@ -97,6 +103,7 @@ Ast(
                                         ),
                                         state: Checked(
                                             "Int",
+                                            2,
                                         ),
                                     },
                                 ],
@@ -107,6 +114,7 @@ Ast(
                             ),
                             state: Checked(
                                 "Int",
+                                2,
                             ),
                         },
                         rh: Expression {
@@ -119,6 +127,7 @@ Ast(
                             ),
                             state: Checked(
                                 "Int",
+                                2,
                             ),
                         },
                     },
@@ -128,6 +137,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
             },
@@ -137,6 +147,7 @@ Ast(
             ),
             state: Checked(
                 "Int",
+                2,
             ),
         },
     ],

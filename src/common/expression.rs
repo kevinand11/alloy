@@ -66,7 +66,7 @@ pub enum InfixOp {
 
 #[derive(Clone, Debug)]
 pub enum ExpressionState {
-    Checked(String),
+    Checked(String, usize),
     Unchecked,
 }
 
@@ -85,17 +85,17 @@ impl Expression {
             state: ExpressionState::Unchecked,
         }
     }
-    pub fn mark_checked(&self, ty: &str) -> Self {
+    pub fn mark_checked(&self, ty: (&str, usize)) -> Self {
         Self {
             kind: self.kind.clone(),
             span: self.span.clone(),
-            state: ExpressionState::Checked(ty.to_string()),
+            state: ExpressionState::Checked(ty.0.to_string(), ty.1),
         }
     }
-    pub fn ty(&self) -> Option<&str> {
+    pub fn ty(&self) -> (&str, usize) {
         match &self.state {
-            ExpressionState::Checked(ty) => Some(ty),
-            ExpressionState::Unchecked => None,
+            ExpressionState::Checked(ty_name, ty_id) => (ty_name.as_str(), *ty_id),
+            ExpressionState::Unchecked => ("Unknown", 0),
         }
     }
 

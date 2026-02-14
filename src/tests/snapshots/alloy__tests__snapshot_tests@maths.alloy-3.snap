@@ -21,6 +21,7 @@ Ast(
                             ),
                             state: Checked(
                                 "Int",
+                                2,
                             ),
                         },
                         rh: Expression {
@@ -33,6 +34,7 @@ Ast(
                             ),
                             state: Checked(
                                 "Int",
+                                2,
                             ),
                         },
                     },
@@ -42,6 +44,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
                 rh: Expression {
@@ -54,6 +57,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
             },
@@ -63,6 +67,7 @@ Ast(
             ),
             state: Checked(
                 "Int",
+                2,
             ),
         },
         Expression {
@@ -78,6 +83,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
                 rh: Expression {
@@ -90,6 +96,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
             },
@@ -99,6 +106,7 @@ Ast(
             ),
             state: Checked(
                 "Float",
+                3,
             ),
         },
         Expression {
@@ -114,6 +122,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
                 rh: Expression {
@@ -126,6 +135,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
             },
@@ -135,6 +145,7 @@ Ast(
             ),
             state: Checked(
                 "Int",
+                2,
             ),
         },
         Expression {
@@ -150,6 +161,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
                 rh: Expression {
@@ -162,6 +174,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
             },
@@ -171,6 +184,7 @@ Ast(
             ),
             state: Checked(
                 "Bool",
+                4,
             ),
         },
         Expression {
@@ -186,6 +200,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
                 rh: Expression {
@@ -198,6 +213,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
             },
@@ -207,6 +223,7 @@ Ast(
             ),
             state: Checked(
                 "Bool",
+                4,
             ),
         },
         Expression {
@@ -222,6 +239,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
                 rh: Expression {
@@ -234,6 +252,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
             },
@@ -243,6 +262,7 @@ Ast(
             ),
             state: Checked(
                 "Bool",
+                4,
             ),
         },
         Expression {
@@ -258,6 +278,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
                 rh: Expression {
@@ -270,6 +291,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
             },
@@ -279,6 +301,7 @@ Ast(
             ),
             state: Checked(
                 "Bool",
+                4,
             ),
         },
         Expression {
@@ -311,6 +334,7 @@ Ast(
             ),
             state: Checked(
                 "Bool",
+                4,
             ),
         },
         Expression {
@@ -343,6 +367,7 @@ Ast(
             ),
             state: Checked(
                 "Bool",
+                4,
             ),
         },
         Expression {
@@ -358,6 +383,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
             },
@@ -367,6 +393,7 @@ Ast(
             ),
             state: Checked(
                 "Bool",
+                4,
             ),
         },
     ],

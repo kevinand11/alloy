@@ -18,6 +18,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
                 mutable: false,
@@ -29,6 +30,7 @@ Ast(
             ),
             state: Checked(
                 "Unit",
+                1,
             ),
         },
         Expression {
@@ -44,6 +46,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
                 mutable: true,
@@ -55,6 +58,7 @@ Ast(
             ),
             state: Checked(
                 "Unit",
+                1,
             ),
         },
         Expression {
@@ -73,6 +77,7 @@ Ast(
                             ),
                             state: Checked(
                                 "Int",
+                                2,
                             ),
                         },
                         rh: Expression {
@@ -85,6 +90,7 @@ Ast(
                             ),
                             state: Checked(
                                 "Int",
+                                2,
                             ),
                         },
                     },
@@ -94,6 +100,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
                 mutable: true,
@@ -109,6 +116,7 @@ Ast(
             ),
             state: Checked(
                 "Unit",
+                1,
             ),
         },
         Expression {
@@ -124,6 +132,7 @@ Ast(
                     ),
                     state: Checked(
                         "Int",
+                        2,
                     ),
                 },
             },
@@ -133,6 +142,7 @@ Ast(
             ),
             state: Checked(
                 "Bool",
+                4,
             ),
         },
         Expression {
@@ -148,6 +158,7 @@ Ast(
                     ),
                     state: Checked(
                         "Bool",
+                        4,
                     ),
                 },
                 mutable: false,
@@ -159,6 +170,7 @@ Ast(
             ),
             state: Checked(
                 "Unit",
+                1,
             ),
         },
         Expression {
@@ -174,6 +186,7 @@ Ast(
                     ),
                     state: Checked(
                         "Bool",
+                        4,
                     ),
                 },
                 mutable: false,
@@ -185,6 +198,7 @@ Ast(
             ),
             state: Checked(
                 "Unit",
+                1,
             ),
         },
         Expression {
@@ -203,6 +217,7 @@ Ast(
                             ),
                             state: Checked(
                                 "Bool",
+                                4,
                             ),
                         },
                     },
@@ -212,6 +227,7 @@ Ast(
                     ),
                     state: Checked(
                         "Bool",
+                        4,
                     ),
                 },
                 mutable: false,
@@ -223,6 +239,7 @@ Ast(
             ),
             state: Checked(
                 "Unit",
+                1,
             ),
         },
         Expression {
@@ -244,6 +261,7 @@ Ast(
                                     ),
                                     state: Checked(
                                         "Bool",
+                                        4,
                                     ),
                                 },
                             },
@@ -253,6 +271,7 @@ Ast(
                             ),
                             state: Checked(
                                 "Bool",
+                                4,
                             ),
                         },
                     },
@@ -262,6 +281,7 @@ Ast(
                     ),
                     state: Checked(
                         "Bool",
+                        4,
                     ),
                 },
                 mutable: false,
@@ -273,6 +293,7 @@ Ast(
             ),
             state: Checked(
                 "Unit",
+                1,
             ),
         },
     ],
