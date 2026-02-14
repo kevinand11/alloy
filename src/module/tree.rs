@@ -1,4 +1,4 @@
-use std::{fs, path::PathBuf};
+use std::{ffi::OsStr, fs, path::PathBuf};
 
 use crate::module::module::Module;
 
@@ -8,14 +8,14 @@ pub struct ModuleTree {
 }
 
 impl ModuleTree {
-    pub fn new(path: &PathBuf) -> Self {
+    pub fn new(path: &PathBuf, entry_file_name: Option<&OsStr>) -> Self {
         let mut modules = vec![];
         walk_dir_and_read_modules(path, &mut modules).expect("Failed to read modules from path");
 
         let entry_path = if path.is_file() {
             path.clone()
         } else {
-            path.join("main.alloy")
+            path.join(entry_file_name.unwrap_or(OsStr::new("main.alloy")))
         };
 
         Self {

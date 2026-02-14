@@ -1,6 +1,6 @@
 ---
 source: src/tests/mod.rs
-expression: "Parser::new(&lexer).parse().unwrap()"
+expression: ast.unwrap()
 input_file: src/tests/cases/variables.alloy
 ---
 Ast(
