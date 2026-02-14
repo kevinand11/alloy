@@ -18,10 +18,14 @@ impl ModuleTree {
             path.join(entry_file_name.unwrap_or(OsStr::new("main.alloy")))
         };
 
-        Self {
+        let tree = Self {
             entry_path,
             modules,
-        }
+        };
+
+		tree.entry();
+
+		tree
     }
 
     pub fn entry(&self) -> &Module {
