@@ -4,6 +4,7 @@ use crate::common::span::Span;
 pub struct Token {
     pub kind: TokenKind,
     pub span: Span,
+    pub text: String
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -42,10 +43,11 @@ pub enum TokenKind {
 }
 
 impl Token {
-    pub fn new(kind: TokenKind, position: usize, len: usize) -> Self {
+    pub fn new(kind: TokenKind, text: &str, position: usize) -> Self {
         Token {
             kind,
-            span: Span::new(position, position + len),
+            text: text.to_string(),
+            span: Span::new(position, position + text.len()),
         }
     }
 }

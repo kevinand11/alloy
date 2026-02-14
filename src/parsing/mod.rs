@@ -7,7 +7,7 @@ use crate::{
         span::Span,
     },
     lexing::{
-        Lexer, TokenIter,
+        Lexer,
         token::{Token, TokenKind},
     },
     parsing::precedence::Precedence,
@@ -18,14 +18,13 @@ pub mod errors;
 pub mod precedence;
 
 pub struct Parser<'a> {
-    pub lexer: &'a Lexer<'a>,
-    tokens: Peekable<TokenIter<'a>>,
+    tokens: Peekable<Lexer<'a>>,
 }
 
 impl<'a> Parser<'a> {
-    pub fn new(lexer: &'a Lexer) -> Self {
-        let tokens = lexer.iter().peekable();
-        Self { lexer, tokens }
+    pub fn new(tokens: Lexer<'a>) -> Self {
+        let tokens = tokens.peekable();
+        Self { tokens }
     }
 
     pub fn parse(&mut self) -> Result<Ast, ParseError> {
@@ -156,8 +155,7 @@ impl<'a> Parser<'a> {
     fn parse_number(&mut self) -> Result<Expression, ParseError> {
         let token = self.expect(TokenKind::Number)?;
 
-        let raw = self.lexer.module.span_slice(&token.span);
-        let cleaned: String = raw.chars().filter(|c| *c != '_').collect();
+        let cleaned: String = token.text.chars().filter(|c| *c != '_').collect();
 
         if cleaned.contains('.') {
             let num: f32 = cleaned
@@ -178,7 +176,7 @@ impl<'a> Parser<'a> {
     fn parse_boolean(&mut self) -> Result<Expression, ParseError> {
         let token = self.expect(TokenKind::Boolean)?;
 
-        let value = match self.lexer.module.token(&token) {
+        let value = match token.text.as_str() {
             "true" => true,
             "false" => false,
             _ => return Err(ParseError::syntax(&token, "invalid bool")),
@@ -198,7 +196,7 @@ impl<'a> Parser<'a> {
         let (value, value_span) = self.parse_type()?;
         Ok(Expression::new(
             ExpressionKind::TypeDecl {
-                name: self.lexer.module.token(&name).to_string(),
+                name: name.text,
                 value,
             },
             token.span.to(&value_span),
@@ -207,11 +205,10 @@ impl<'a> Parser<'a> {
 
     fn parse_type(&mut self) -> Result<(TypeIdent, Span), ParseError> {
         let token = self.expect(TokenKind::Ident)?;
-        Ok((TypeIdent(self.lexer.module.token(&token).to_string()), token.span))
+        Ok((TypeIdent(token.text), token.span))
     }
 
     fn parse_variable_declaration(&mut self, start: Token) -> Result<Expression, ParseError> {
-        let name = self.lexer.module.token(&start).to_string();
         self.consume()?;
         let mut ty = None;
         if self.peek_kind() == &TokenKind::Ident {
@@ -234,7 +231,7 @@ impl<'a> Parser<'a> {
         let span = start.span.to(&value.span);
         Ok(Expression::new(
             ExpressionKind::VariableDecl {
-                name,
+                name: start.text,
                 value: Box::new(value),
                 mutable,
                 ty: ty.map(|(ty, _)| ty),
@@ -244,13 +241,12 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_variable_assignment(&mut self, start: Token) -> Result<Expression, ParseError> {
-        let name = self.lexer.module.token(&start).to_string();
         self.consume()?;
         let value = self.parse_expression(&Precedence::Lowest)?;
         let span = start.span.to(&value.span);
         Ok(Expression::new(
             ExpressionKind::VariableAssignment {
-                name,
+                name: start.text,
                 value: Box::new(value),
             },
             span,
@@ -258,8 +254,10 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_variable_usage(&mut self, start: Token) -> Result<Expression, ParseError> {
-        let name = (*self).lexer.module.token(&start).to_string();
-        Ok(Expression::new(ExpressionKind::Ident(name), start.span))
+        Ok(Expression::new(
+            ExpressionKind::Ident(start.text),
+            start.span,
+        ))
     }
 
     fn parse_function_call(
@@ -282,7 +280,7 @@ impl<'a> Parser<'a> {
         }
         let end = self.expect(TokenKind::RParen)?;
         let span = start.to(&end.span);
-        Ok((self.lexer.module.token(&ident).to_string(), args, span))
+        Ok((ident.text, args, span))
     }
 
     fn expect(&mut self, exp: TokenKind) -> Result<Token, ParseError> {

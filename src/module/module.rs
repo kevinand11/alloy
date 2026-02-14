@@ -1,17 +1,18 @@
-use std::str::Chars;
+use std::{path::PathBuf, str::Chars};
 
 use crate::{common::span::Span, lexing::token::Token};
 
 #[derive(Debug)]
 pub struct Module {
     pub src: String,
+    pub file_path: PathBuf,
 }
 
 type IterItem = (char, usize);
 
 impl Module {
-    pub fn new(src: String) -> Self {
-        Self { src }
+    pub fn new(src: String, file_path: PathBuf) -> Self {
+        Self { src, file_path }
     }
 
     pub fn iter(&self) -> Chars<'_> {

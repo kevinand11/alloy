@@ -3,6 +3,7 @@
 mod checking;
 mod common;
 mod lexing;
+mod module;
 mod parsing;
 
 #[cfg(test)]

@@ -10,6 +10,7 @@ input_file: src/tests/cases/maths.alloy
             0,
             1,
         ),
+        text: "0",
     },
     Token {
         kind: Minus,
@@ -17,6 +18,7 @@ input_file: src/tests/cases/maths.alloy
             2,
             3,
         ),
+        text: "-",
     },
     Token {
         kind: Number,
@@ -24,6 +26,7 @@ input_file: src/tests/cases/maths.alloy
             4,
             5,
         ),
+        text: "1",
     },
     Token {
         kind: Plus,
@@ -31,6 +34,7 @@ input_file: src/tests/cases/maths.alloy
             6,
             7,
         ),
+        text: "+",
     },
     Token {
         kind: Number,
@@ -38,6 +42,7 @@ input_file: src/tests/cases/maths.alloy
             8,
             9,
         ),
+        text: "2",
     },
     Token {
         kind: Number,
@@ -45,6 +50,7 @@ input_file: src/tests/cases/maths.alloy
             11,
             12,
         ),
+        text: "3",
     },
     Token {
         kind: Slash,
@@ -52,6 +58,7 @@ input_file: src/tests/cases/maths.alloy
             13,
             14,
         ),
+        text: "/",
     },
     Token {
         kind: Number,
@@ -59,6 +66,7 @@ input_file: src/tests/cases/maths.alloy
             14,
             15,
         ),
+        text: "4",
     },
     Token {
         kind: Number,
@@ -66,6 +74,7 @@ input_file: src/tests/cases/maths.alloy
             17,
             18,
         ),
+        text: "4",
     },
     Token {
         kind: Caret,
@@ -73,6 +82,7 @@ input_file: src/tests/cases/maths.alloy
             18,
             19,
         ),
+        text: "^",
     },
     Token {
         kind: Number,
@@ -80,6 +90,7 @@ input_file: src/tests/cases/maths.alloy
             19,
             20,
         ),
+        text: "3",
     },
     Token {
         kind: Number,
@@ -87,6 +98,7 @@ input_file: src/tests/cases/maths.alloy
             22,
             23,
         ),
+        text: "5",
     },
     Token {
         kind: LessThan,
@@ -94,6 +106,7 @@ input_file: src/tests/cases/maths.alloy
             24,
             25,
         ),
+        text: "<",
     },
     Token {
         kind: Number,
@@ -101,6 +114,7 @@ input_file: src/tests/cases/maths.alloy
             26,
             27,
         ),
+        text: "6",
     },
     Token {
         kind: Number,
@@ -108,6 +122,7 @@ input_file: src/tests/cases/maths.alloy
             28,
             29,
         ),
+        text: "7",
     },
     Token {
         kind: GreaterThan,
@@ -115,6 +130,7 @@ input_file: src/tests/cases/maths.alloy
             30,
             31,
         ),
+        text: ">",
     },
     Token {
         kind: Number,
@@ -122,6 +138,7 @@ input_file: src/tests/cases/maths.alloy
             32,
             33,
         ),
+        text: "8",
     },
     Token {
         kind: Number,
@@ -129,6 +146,7 @@ input_file: src/tests/cases/maths.alloy
             34,
             35,
         ),
+        text: "9",
     },
     Token {
         kind: LessThanOrEqual,
@@ -136,6 +154,7 @@ input_file: src/tests/cases/maths.alloy
             36,
             38,
         ),
+        text: "<=",
     },
     Token {
         kind: Number,
@@ -143,6 +162,7 @@ input_file: src/tests/cases/maths.alloy
             39,
             41,
         ),
+        text: "10",
     },
     Token {
         kind: Number,
@@ -150,6 +170,7 @@ input_file: src/tests/cases/maths.alloy
             42,
             44,
         ),
+        text: "11",
     },
     Token {
         kind: GreaterThanOrEqual,
@@ -157,6 +178,7 @@ input_file: src/tests/cases/maths.alloy
             45,
             47,
         ),
+        text: ">=",
     },
     Token {
         kind: Number,
@@ -164,6 +186,7 @@ input_file: src/tests/cases/maths.alloy
             48,
             50,
         ),
+        text: "12",
     },
     Token {
         kind: Number,
@@ -171,6 +194,7 @@ input_file: src/tests/cases/maths.alloy
             51,
             53,
         ),
+        text: "13",
     },
     Token {
         kind: DoubleEquals,
@@ -178,6 +202,7 @@ input_file: src/tests/cases/maths.alloy
             54,
             56,
         ),
+        text: "==",
     },
     Token {
         kind: Number,
@@ -185,6 +210,7 @@ input_file: src/tests/cases/maths.alloy
             57,
             59,
         ),
+        text: "14",
     },
     Token {
         kind: Number,
@@ -192,6 +218,7 @@ input_file: src/tests/cases/maths.alloy
             60,
             62,
         ),
+        text: "15",
     },
     Token {
         kind: NotEquals,
@@ -199,6 +226,7 @@ input_file: src/tests/cases/maths.alloy
             63,
             65,
         ),
+        text: "!=",
     },
     Token {
         kind: Number,
@@ -206,6 +234,7 @@ input_file: src/tests/cases/maths.alloy
             66,
             68,
         ),
+        text: "16",
     },
     Token {
         kind: Exclamation,
@@ -213,6 +242,7 @@ input_file: src/tests/cases/maths.alloy
             70,
             71,
         ),
+        text: "!",
     },
     Token {
         kind: Number,
@@ -220,5 +250,6 @@ input_file: src/tests/cases/maths.alloy
             71,
             73,
         ),
+        text: "17",
     },
 ]

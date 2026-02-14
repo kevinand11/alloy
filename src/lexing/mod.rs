@@ -5,174 +5,46 @@ use std::{
 
 use token::{Token, TokenKind::*};
 
-use crate::lexing::module::Module;
+use crate::{lexing::token::TokenKind, module::module::Module};
 
-pub mod module;
 pub mod token;
 
 pub struct Lexer<'a> {
-    pub module: &'a Module,
-}
-
-pub struct TokenIter<'a> {
-    lexer: &'a Lexer<'a>,
+    module: &'a Module,
     char_peeker: Peekable<Enumerate<Chars<'a>>>,
 }
 
 impl<'a> Lexer<'a> {
     pub fn new(module: &'a Module) -> Self {
-        Self { module }
-    }
-
-    pub fn iter(&self) -> TokenIter<'_> {
-        TokenIter {
-            lexer: self,
-            char_peeker: self.module.iter().enumerate().peekable(),
+        Self {
+            module: module,
+            char_peeker: module.iter().enumerate().peekable(),
         }
     }
 
-    fn next_token(&self, char_peeker: &mut Peekable<Enumerate<Chars<'_>>>) -> Option<Token> {
-        while char_peeker.peek().is_some_and(|(_, c)| c.is_whitespace()) {
-            char_peeker.next();
-        }
-
-        let Some((cur_idx, cur_char)) = char_peeker.peek() else {
-            return None;
-        };
-
-        let cur_idx = *cur_idx;
-
-        let mut call_next = true;
-
-        let token = match cur_char {
-            '#' => {
-                char_peeker.next();
-                let mut size = 1;
-                while let Some((_, c)) = char_peeker.next() {
-                    size = size + 1;
-                    if c == '\n' {
-                        break;
-                    }
-                }
-                Token::new(Comment, cur_idx, size)
-            }
-
-            '+' => Token::new(Plus, cur_idx, 1),
-            '-' => Token::new(Minus, cur_idx, 1),
-            '*' => Token::new(Asterisk, cur_idx, 1),
-            '/' => Token::new(Slash, cur_idx, 1),
-            '^' => Token::new(Caret, cur_idx, 1),
-
-            '=' => {
-                char_peeker.next();
-                if char_peeker.peek().is_some_and(|(_, c)| c == &'=') {
-                    Token::new(DoubleEquals, cur_idx, 2)
-                } else {
-                    call_next = false;
-                    Token::new(Equals, cur_idx, 1)
-                }
-            }
-            '<' => {
-                char_peeker.next();
-                if char_peeker.peek().is_some_and(|(_, c)| c == &'=') {
-                    Token::new(LessThanOrEqual, cur_idx, 2)
-                } else {
-                    call_next = false;
-                    Token::new(LessThan, cur_idx, 1)
-                }
-            }
-            '>' => {
-                char_peeker.next();
-                if char_peeker.peek().is_some_and(|(_, c)| c == &'=') {
-                    Token::new(GreaterThanOrEqual, cur_idx, 2)
-                } else {
-                    call_next = false;
-                    Token::new(GreaterThan, cur_idx, 1)
-                }
-            }
-            '!' => {
-                char_peeker.next();
-                if char_peeker.peek().is_some_and(|(_, c)| c == &'=') {
-                    Token::new(NotEquals, cur_idx, 2)
-                } else {
-                    call_next = false;
-                    Token::new(Exclamation, cur_idx, 1)
-                }
-            }
-
-            '{' => Token::new(LBrace, cur_idx, 1),
-            '}' => Token::new(RBrace, cur_idx, 1),
-            '(' => Token::new(LParen, cur_idx, 1),
-            ')' => Token::new(RParen, cur_idx, 1),
-            ':' => Token::new(Colon, cur_idx, 1),
-            ',' => Token::new(Comma, cur_idx, 1),
-
-            'a'..='z' | 'A'..='Z' | '_' => {
-                let mut last = cur_idx;
-                while char_peeker
-                    .peek()
-                    .is_some_and(|(_, c)| c.is_ascii_alphanumeric() || c == &'_')
-                {
-                    let (l, _) = char_peeker.next().unwrap();
-                    last = l;
-                }
-                let chars = self.module.slice(cur_idx, last + 1);
-                call_next = false;
-                match chars {
-                    "true" => Token::new(Boolean, cur_idx, 4),
-                    "false" => Token::new(Boolean, cur_idx, 5),
-                    "type" => Token::new(Type, cur_idx, 4),
-                    _ => Token::new(Ident, cur_idx, chars.len()),
-                }
-            }
-            '0'..='9' => {
-                let last = self.read_number(char_peeker, cur_idx);
-                let chars = &self.module.slice(cur_idx, last + 1);
-                call_next = false;
-                Token::new(Number, cur_idx, chars.len())
-            }
-
-            '.' => {
-                char_peeker.next();
-                call_next = false;
-                if char_peeker.peek().is_some_and(|(_, c)| c.is_ascii_digit()) {
-                    let last = self.read_number(char_peeker, cur_idx);
-                    let chars = &self.module.slice(cur_idx, last + 1);
-                    Token::new(Number, cur_idx, chars.len())
-                } else {
-                    Token::new(Dot, cur_idx, 1)
-                }
-            }
-
-            _ => Token::new(Illegal, cur_idx, 1),
-        };
-
-        if call_next {
-            char_peeker.next();
-        }
-
-        Some(token)
+    fn consume(&self, kind: TokenKind, cur_idx: usize, size: usize) -> Token {
+        Token::new(kind, &self.module.slice(cur_idx, cur_idx + size), cur_idx)
     }
 
-    fn read_number(&self, char_peeker: &mut Peekable<Enumerate<Chars<'_>>>, start: usize) -> usize {
+    fn read_number(&mut self, start: usize) -> usize {
         let mut last = start;
         let mut seen_dot = false;
 
-        while let Some((_, c)) = char_peeker.peek() {
+        while let Some((_, c)) = self.char_peeker.peek() {
             match *c {
                 '0'..='9' => {
-                    let (l, _) = char_peeker.next().unwrap();
+                    let (l, _) = self.char_peeker.next().unwrap();
                     last = l;
                 }
                 '_' => {
-                    let (l, _) = char_peeker.next().unwrap();
+                    let (l, _) = self.char_peeker.next().unwrap();
                     last = l;
                 }
                 '.' if !seen_dot => {
-                    let mut lookahead = char_peeker.clone();
+                    let mut lookahead = self.char_peeker.clone();
                     lookahead.next();
                     if lookahead.peek().is_some_and(|(_, n)| n.is_ascii_digit()) {
-                        let (l, _) = char_peeker.next().unwrap();
+                        let (l, _) = self.char_peeker.next().unwrap();
                         last = l;
                         seen_dot = true;
                     } else {
@@ -187,10 +59,136 @@ impl<'a> Lexer<'a> {
     }
 }
 
-impl<'a> Iterator for TokenIter<'a> {
+impl<'a> Iterator for Lexer<'a> {
     type Item = Token;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.lexer.next_token(&mut self.char_peeker)
+        while self
+            .char_peeker
+            .peek()
+            .is_some_and(|(_, c)| c.is_whitespace())
+        {
+            self.char_peeker.next();
+        }
+
+        let Some((cur_idx, cur_char)) = self.char_peeker.peek() else {
+            return None;
+        };
+
+        let cur_idx = *cur_idx;
+
+        let mut call_next = true;
+
+        let token = match cur_char {
+            '#' => {
+                self.char_peeker.next();
+                let mut size = 1;
+                while let Some((_, c)) = self.char_peeker.next() {
+                    size = size + 1;
+                    if c == '\n' {
+                        break;
+                    }
+                }
+                self.consume(Comment, cur_idx, size)
+            }
+
+            '+' => self.consume(Plus, cur_idx, 1),
+            '-' => self.consume(Minus, cur_idx, 1),
+            '*' => self.consume(Asterisk, cur_idx, 1),
+            '/' => self.consume(Slash, cur_idx, 1),
+            '^' => self.consume(Caret, cur_idx, 1),
+
+            '=' => {
+                self.char_peeker.next();
+                if self.char_peeker.peek().is_some_and(|(_, c)| c == &'=') {
+                    self.consume(DoubleEquals, cur_idx, 2)
+                } else {
+                    call_next = false;
+                    self.consume(Equals, cur_idx, 1)
+                }
+            }
+            '<' => {
+                self.char_peeker.next();
+                if self.char_peeker.peek().is_some_and(|(_, c)| c == &'=') {
+                    self.consume(LessThanOrEqual, cur_idx, 2)
+                } else {
+                    call_next = false;
+                    self.consume(LessThan, cur_idx, 1)
+                }
+            }
+            '>' => {
+                self.char_peeker.next();
+                if self.char_peeker.peek().is_some_and(|(_, c)| c == &'=') {
+                    self.consume(GreaterThanOrEqual, cur_idx, 2)
+                } else {
+                    call_next = false;
+                    self.consume(GreaterThan, cur_idx, 1)
+                }
+            }
+            '!' => {
+                self.char_peeker.next();
+                if self.char_peeker.peek().is_some_and(|(_, c)| c == &'=') {
+                    self.consume(NotEquals, cur_idx, 2)
+                } else {
+                    call_next = false;
+                    self.consume(Exclamation, cur_idx, 1)
+                }
+            }
+
+            '{' => self.consume(LBrace, cur_idx, 1),
+            '}' => self.consume(RBrace, cur_idx, 1),
+            '(' => self.consume(LParen, cur_idx, 1),
+            ')' => self.consume(RParen, cur_idx, 1),
+            ':' => self.consume(Colon, cur_idx, 1),
+            ',' => self.consume(Comma, cur_idx, 1),
+
+            'a'..='z' | 'A'..='Z' | '_' => {
+                let mut last = cur_idx;
+                while self
+                    .char_peeker
+                    .peek()
+                    .is_some_and(|(_, c)| c.is_ascii_alphanumeric() || c == &'_')
+                {
+                    let (l, _) = self.char_peeker.next().unwrap();
+                    last = l;
+                }
+                let chars = self.module.slice(cur_idx, last + 1);
+                call_next = false;
+                match chars {
+                    "true" => self.consume(Boolean, cur_idx, 4),
+                    "false" => self.consume(Boolean, cur_idx, 5),
+                    "type" => self.consume(Type, cur_idx, 4),
+                    _ => self.consume(Ident, cur_idx, chars.len()),
+                }
+            }
+            '0'..='9' => {
+                let last = self.read_number(cur_idx);
+                call_next = false;
+                self.consume(Number, cur_idx, last + 1 - cur_idx)
+            }
+
+            '.' => {
+                self.char_peeker.next();
+                call_next = false;
+                if self
+                    .char_peeker
+                    .peek()
+                    .is_some_and(|(_, c)| c.is_ascii_digit())
+                {
+                    let last = self.read_number(cur_idx);
+                    self.consume(Number, cur_idx, last + 1 - cur_idx)
+                } else {
+                    self.consume(Dot, cur_idx, 1)
+                }
+            }
+
+            _ => self.consume(Illegal, cur_idx, 1),
+        };
+
+        if call_next {
+            self.char_peeker.next();
+        }
+
+        Some(token)
     }
 }

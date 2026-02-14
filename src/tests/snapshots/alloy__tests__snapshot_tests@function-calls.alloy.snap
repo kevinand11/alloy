@@ -10,6 +10,7 @@ input_file: src/tests/cases/function-calls.alloy
             0,
             1,
         ),
+        text: "2",
     },
     Token {
         kind: Dot,
@@ -17,6 +18,7 @@ input_file: src/tests/cases/function-calls.alloy
             1,
             2,
         ),
+        text: ".",
     },
     Token {
         kind: Ident,
@@ -24,6 +26,7 @@ input_file: src/tests/cases/function-calls.alloy
             2,
             9,
         ),
+        text: "to_unit",
     },
     Token {
         kind: LParen,
@@ -31,6 +34,7 @@ input_file: src/tests/cases/function-calls.alloy
             9,
             10,
         ),
+        text: "(",
     },
     Token {
         kind: RParen,
@@ -38,6 +42,7 @@ input_file: src/tests/cases/function-calls.alloy
             10,
             11,
         ),
+        text: ")",
     },
     Token {
         kind: Ident,
@@ -45,6 +50,7 @@ input_file: src/tests/cases/function-calls.alloy
             13,
             14,
         ),
+        text: "a",
     },
     Token {
         kind: Colon,
@@ -52,6 +58,7 @@ input_file: src/tests/cases/function-calls.alloy
             14,
             15,
         ),
+        text: ":",
     },
     Token {
         kind: Equals,
@@ -59,6 +66,7 @@ input_file: src/tests/cases/function-calls.alloy
             15,
             16,
         ),
+        text: "=",
     },
     Token {
         kind: Boolean,
@@ -66,6 +74,7 @@ input_file: src/tests/cases/function-calls.alloy
             16,
             20,
         ),
+        text: "true",
     },
     Token {
         kind: Ident,
@@ -73,6 +82,7 @@ input_file: src/tests/cases/function-calls.alloy
             21,
             22,
         ),
+        text: "a",
     },
     Token {
         kind: Equals,
@@ -80,6 +90,7 @@ input_file: src/tests/cases/function-calls.alloy
             22,
             23,
         ),
+        text: "=",
     },
     Token {
         kind: Boolean,
@@ -87,6 +98,7 @@ input_file: src/tests/cases/function-calls.alloy
             23,
             28,
         ),
+        text: "false",
     },
     Token {
         kind: Number,
@@ -94,6 +106,7 @@ input_file: src/tests/cases/function-calls.alloy
             29,
             30,
         ),
+        text: "3",
     },
     Token {
         kind: Dot,
@@ -101,6 +114,7 @@ input_file: src/tests/cases/function-calls.alloy
             30,
             31,
         ),
+        text: ".",
     },
     Token {
         kind: Ident,
@@ -108,6 +122,7 @@ input_file: src/tests/cases/function-calls.alloy
             31,
             38,
         ),
+        text: "to_unit",
     },
     Token {
         kind: LParen,
@@ -115,6 +130,7 @@ input_file: src/tests/cases/function-calls.alloy
             38,
             39,
         ),
+        text: "(",
     },
     Token {
         kind: Ident,
@@ -122,6 +138,7 @@ input_file: src/tests/cases/function-calls.alloy
             39,
             40,
         ),
+        text: "a",
     },
     Token {
         kind: Comma,
@@ -129,6 +146,7 @@ input_file: src/tests/cases/function-calls.alloy
             40,
             41,
         ),
+        text: ",",
     },
     Token {
         kind: Number,
@@ -136,6 +154,7 @@ input_file: src/tests/cases/function-calls.alloy
             41,
             42,
         ),
+        text: "4",
     },
     Token {
         kind: RParen,
@@ -143,5 +162,6 @@ input_file: src/tests/cases/function-calls.alloy
             42,
             43,
         ),
+        text: ")",
     },
 ]

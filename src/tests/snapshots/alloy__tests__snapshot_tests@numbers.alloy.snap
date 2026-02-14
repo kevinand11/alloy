@@ -10,6 +10,7 @@ input_file: src/tests/cases/numbers.alloy
             0,
             3,
         ),
+        text: "1.2",
     },
     Token {
         kind: Plus,
@@ -17,6 +18,7 @@ input_file: src/tests/cases/numbers.alloy
             4,
             5,
         ),
+        text: "+",
     },
     Token {
         kind: Number,
@@ -24,6 +26,7 @@ input_file: src/tests/cases/numbers.alloy
             6,
             13,
         ),
+        text: "100_000",
     },
     Token {
         kind: Plus,
@@ -31,6 +34,7 @@ input_file: src/tests/cases/numbers.alloy
             14,
             15,
         ),
+        text: "+",
     },
     Token {
         kind: Number,
@@ -38,5 +42,6 @@ input_file: src/tests/cases/numbers.alloy
             16,
             20,
         ),
+        text: ".234",
     },
 ]
