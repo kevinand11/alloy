@@ -112,6 +112,7 @@ impl<'a> Parser<'a> {
             }
             TokenKind::Boolean => self.parse_boolean(),
             TokenKind::Number => self.parse_number(),
+            TokenKind::Type => self.parse_type_decl(),
             TokenKind::Exclamation => self.parse_prefix_expression(PrefixOp::Not),
             TokenKind::LBrace => self.parse_block_expression(),
             TokenKind::Ident => {
@@ -189,9 +190,24 @@ impl<'a> Parser<'a> {
         ))
     }
 
-    fn parse_type(&mut self) -> Result<TypeIdent, ParseError> {
+    fn parse_type_decl(&mut self) -> Result<Expression, ParseError> {
+        let token = self.expect(TokenKind::Type)?;
+        let name = self.expect(TokenKind::Ident)?;
+        self.expect(TokenKind::Colon)?;
+        self.expect(TokenKind::Equals)?;
+        let (value, value_span) = self.parse_type()?;
+        Ok(Expression::new(
+            ExpressionKind::TypeDecl {
+                name: self.lexer.module.token(&name).to_string(),
+                value,
+            },
+            token.span.to(&value_span),
+        ))
+    }
+
+    fn parse_type(&mut self) -> Result<(TypeIdent, Span), ParseError> {
         let token = self.expect(TokenKind::Ident)?;
-        Ok(TypeIdent(self.lexer.module.token(&token).to_string()))
+        Ok((TypeIdent(self.lexer.module.token(&token).to_string()), token.span))
     }
 
     fn parse_variable_declaration(&mut self, start: Token) -> Result<Expression, ParseError> {
@@ -221,7 +237,7 @@ impl<'a> Parser<'a> {
                 name,
                 value: Box::new(value),
                 mutable,
-                ty,
+                ty: ty.map(|(ty, _)| ty),
             },
             span,
         ))

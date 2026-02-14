@@ -27,6 +27,11 @@ pub enum ExpressionKind {
         ty: Option<TypeIdent>,
     },
 
+    TypeDecl {
+        name: String,
+        value: TypeIdent,
+    },
+
     VariableAssignment {
         name: String,
         value: Box<Expression>,

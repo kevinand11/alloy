@@ -1,7 +1,10 @@
 use crate::{
     checking::{
         errors::CheckError,
-        scope::{BOOL_TYPE_ID, FLOAT_TYPE_ID, INT_TYPE_ID, ScopeManager, ScopeTypeId, ScopedVar, UNIT_TYPE_ID},
+        scope::{
+            BOOL_TYPE_ID, FLOAT_TYPE_ID, INT_TYPE_ID, ScopeManager, ScopeTypeId, ScopedVar,
+            UNIT_TYPE_ID,
+        },
     },
     common::{
         ast::Ast,
@@ -50,9 +53,12 @@ impl Checker {
             ExpressionKind::Ident(name) => {
                 let var = self.scope_manager.lookup_var(&name, self.scope_manager.cur);
                 match var {
-                    Some(ScopedVar { id: _, name: _, type_id, mutable: _ }) => {
-                        self.expect(expr, *type_id, type_hint)
-                    }
+                    Some(ScopedVar {
+                        id: _,
+                        name: _,
+                        type_id,
+                        mutable: _,
+                    }) => self.expect(expr, *type_id, type_hint),
                     None => {
                         return Err(CheckError::variable_not_found(&name, &expr.span));
                     }
@@ -77,8 +83,10 @@ impl Checker {
                 | InfixOp::Multiply
                 | InfixOp::Divide
                 | InfixOp::Power => {
-                    let (lh, lh_type) = self.expect_with_types(&lh, vec![INT_TYPE_ID, FLOAT_TYPE_ID])?;
-                    let (rh, rh_type) = self.expect_with_types(&rh, vec![INT_TYPE_ID, FLOAT_TYPE_ID])?;
+                    let (lh, lh_type) =
+                        self.expect_with_types(&lh, vec![INT_TYPE_ID, FLOAT_TYPE_ID])?;
+                    let (rh, rh_type) =
+                        self.expect_with_types(&rh, vec![INT_TYPE_ID, FLOAT_TYPE_ID])?;
                     let res_type = match op {
                         InfixOp::Divide => FLOAT_TYPE_ID,
                         _ => Checker::choose_btw_types(lh_type, rh_type, FLOAT_TYPE_ID),
@@ -163,7 +171,7 @@ impl Checker {
                 let value = if let Some(ty) = ty {
                     let scope_type = self
                         .scope_manager
-                        .lookup_type_by_name(&ty.0, self.scope_manager.cur)
+                        .lookup_type(&ty.0, self.scope_manager.cur)
                         .ok_or(CheckError::type_name_not_found(&ty.0, &expr.span))?;
                     self.check_expression(&value, Some(scope_type.id))?
                 } else {
@@ -203,6 +211,14 @@ impl Checker {
                     UNIT_TYPE_ID,
                     type_hint,
                 )
+            }
+            ExpressionKind::TypeDecl { name, value } => {
+                let parent_type = self
+                    .scope_manager
+                    .lookup_type(&value.0, self.scope_manager.cur)
+                    .ok_or(CheckError::type_name_not_found(&value.0, &expr.span))?;
+                self.scope_manager.add_type(name.as_str(), parent_type.id);
+                self.expect(expr, UNIT_TYPE_ID, type_hint)
             }
             ExpressionKind::FunctionCall { name, args } => {
                 // Hardcoded for now, will implement proper function definitions and lookups later
@@ -259,30 +275,38 @@ impl Checker {
                 Err(_) => (),
             }
         }
-        Err(CheckError::type_mismatch(type_hints, expr_type.1, &expr.span))
+        Err(CheckError::type_mismatch(
+            type_hints,
+            expr_type.1,
+            &expr.span,
+        ))
     }
 
-    fn choose_btw_types(type1: ScopeTypeId, type2: ScopeTypeId, or_else: ScopeTypeId) -> ScopeTypeId {
+    fn choose_btw_types(
+        type1: ScopeTypeId,
+        type2: ScopeTypeId,
+        or_else: ScopeTypeId,
+    ) -> ScopeTypeId {
         if type1 == type2 { type1 } else { or_else }
     }
 
     fn expect<'a>(
         &self,
         expr: &Expression,
-        res_type: ScopeTypeId,
+        exp_type: ScopeTypeId,
         type_hint: Option<ScopeTypeId>,
     ) -> Result<Expression, CheckError> {
         let scope_type = self
             .scope_manager
-            .lookup_type(res_type, self.scope_manager.cur)
-            .ok_or(CheckError::type_not_found(res_type, &expr.span))?;
+            .get_type(exp_type, self.scope_manager.cur)
+            .ok_or(CheckError::type_not_found(exp_type, &expr.span))?;
 
         if let Some(type_hint) = type_hint {
-            if type_hint == res_type {
+            if type_hint == exp_type {
                 Ok(expr.mark_checked((&scope_type.name, scope_type.id)))
             } else {
                 let span = &expr.span;
-                Err(CheckError::type_mismatch(vec![type_hint], res_type, span))
+                Err(CheckError::type_mismatch(vec![type_hint], exp_type, span))
             }
         } else {
             Ok(expr.mark_checked((&scope_type.name, scope_type.id)))

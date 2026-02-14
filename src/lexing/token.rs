@@ -34,6 +34,7 @@ pub enum TokenKind {
     Number,
     Boolean,
     Ident,
+    Type,
 
     Comment,
     Illegal,

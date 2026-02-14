@@ -27,6 +27,7 @@ impl Scope {
 
 pub struct ScopedType {
     pub id: ScopeTypeId,
+    pub parent_id: Option<ScopeTypeId>,
     pub name: String,
 }
 
@@ -52,18 +53,22 @@ impl ScopeManager {
             types: vec![
                 ScopedType {
                     id: UNIT_TYPE_ID,
+                    parent_id: None,
                     name: "Unit".to_string(),
                 },
                 ScopedType {
                     id: INT_TYPE_ID,
+                    parent_id: None,
                     name: "Int".to_string(),
                 },
                 ScopedType {
                     id: FLOAT_TYPE_ID,
+                    parent_id: None,
                     name: "Float".to_string(),
                 },
                 ScopedType {
                     id: BOOL_TYPE_ID,
+                    parent_id: None,
                     name: "Bool".to_string(),
                 },
             ],
@@ -84,23 +89,23 @@ impl ScopeManager {
         id
     }
 
-    pub fn lookup_type_by_name(&self, ty_name: &str, scope_id: ScopeId) -> Option<&ScopedType> {
+    pub fn lookup_type(&self, ty_name: &str, scope_id: ScopeId) -> Option<&ScopedType> {
         let scope = &self.scopes[scope_id];
         if let Some(ty) = scope.types.iter().find(|t| t.name == ty_name) {
             Some(ty)
         } else if let Some(parent_id) = scope.parent {
-            self.lookup_type_by_name(ty_name, parent_id)
+            self.lookup_type(ty_name, parent_id)
         } else {
             None
         }
     }
 
-    pub fn lookup_type(&self, ty_id: ScopeTypeId, scope_id: ScopeId) -> Option<&ScopedType> {
+    pub fn get_type(&self, ty_id: ScopeTypeId, scope_id: ScopeId) -> Option<&ScopedType> {
         let scope = &self.scopes[scope_id];
         if let Some(ty) = scope.types.iter().find(|t| t.id == ty_id) {
             Some(ty)
         } else if let Some(parent_id) = scope.parent {
-            self.lookup_type(ty_id, parent_id)
+            self.get_type(ty_id, parent_id)
         } else {
             None
         }
@@ -132,7 +137,7 @@ impl ScopeManager {
         self.next_var_id += 1;
     }
 
-    pub fn add_type(&mut self, ty_name: &str) {
+    pub fn add_type(&mut self, ty_name: &str, parent_id: ScopeTypeId) {
         let scope = match self.scopes.get_mut(self.cur) {
             Some(scope) => scope,
             None => panic!("Current scope does not exist"),
@@ -140,6 +145,7 @@ impl ScopeManager {
         let ty = ScopedType {
             id: self.next_type_id,
             name: ty_name.to_string(),
+            parent_id: Some(parent_id),
         };
         scope.types.push(ty);
         self.next_type_id += 1;

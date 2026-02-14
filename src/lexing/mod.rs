@@ -121,6 +121,7 @@ impl<'a> Lexer<'a> {
                 match chars {
                     "true" => Token::new(Boolean, cur_idx, 4),
                     "false" => Token::new(Boolean, cur_idx, 5),
+                    "type" => Token::new(Type, cur_idx, 4),
                     _ => Token::new(Ident, cur_idx, chars.len()),
                 }
             }
